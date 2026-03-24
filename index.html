@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DuffCore Architect</title>
+<title>DuffCore Architect V3</title>
 
 <style>
 body {
@@ -16,90 +16,185 @@ body {
 .module {
   background:#18233b;
   padding:15px;
-  margin-bottom:10px;
+  margin-bottom:15px;
   border-radius:10px;
-  cursor:pointer;
 }
 
-.selected {
-  border:2px solid #4f8cff;
+.option {
+  margin:5px 0;
 }
 
 button {
-  margin:5px;
-  padding:10px;
+  margin-left:10px;
+}
+
+.recommended {
+  color:#56d3b0;
+}
+
+.selected {
+  color:#4f8cff;
+}
+
+.plan {
+  background:#111a30;
+  padding:15px;
+  margin-top:20px;
+  border-radius:10px;
 }
 </style>
+
 </head>
 
 <body>
 
-<h1>DuffCore Architect</h1>
+<h1>DuffCore Architect V3</h1>
 
-<button onclick="setRecommended()">Mode recommandé</button>
+<button onclick="setScenario('simple')">Scénario simple</button>
+<button onclick="setScenario('advanced')">Scénario avancé</button>
 
-<div id="modules"></div>
+<div id="app"></div>
+
+<div class="plan">
+<h2>Plan généré</h2>
+<pre id="plan"></pre>
+</div>
 
 <script>
 
 const modules = [
-  {
-    id:"orchestrator",
-    name:"Orchestrateur",
-    options:["Node-RED","LangGraph","n8n"]
-  },
-  {
-    id:"llm",
-    name:"LLM",
-    options:["OpenAI","Ollama","Hybride"]
-  },
-  {
-    id:"memory",
-    name:"Mémoire",
-    options:["Qdrant","Chroma","SQLite"]
-  }
+{
+id:"orchestrator",
+name:"Orchestrateur",
+options:[
+{name:"Node-RED", score:8, desc:"simple et visuel", rec:true},
+{name:"LangGraph", score:10, desc:"puissant mais complexe"},
+{name:"n8n", score:7, desc:"bon pour automatisation"}
+]
+},
+{
+id:"llm",
+name:"LLM",
+options:[
+{name:"OpenAI", score:9, desc:"stable et performant", rec:true},
+{name:"Ollama", score:7, desc:"local"},
+{name:"Hybride", score:10, desc:"flexible"}
+]
+},
+{
+id:"memory",
+name:"Mémoire",
+options:[
+{name:"Qdrant", score:9, desc:"vectoriel robuste", rec:true},
+{name:"Chroma", score:7, desc:"simple"},
+{name:"SQLite", score:6, desc:"basique"}
+]
+}
 ];
 
-let selected = {};
+let state = {};
 
-function render() {
-  const root = document.getElementById("modules");
-  root.innerHTML = "";
+function render(){
 
-  modules.forEach(m => {
-    const div = document.createElement("div");
-    div.className = "module";
+let html = "";
 
-    const current = selected[m.id] || "non défini";
+modules.forEach(m => {
 
-    div.innerHTML = `
-      <h3>${m.name}</h3>
-      <p>Actif : ${current}</p>
-    `;
+html += `<div class="module"><h2>${m.name}</h2>`;
 
-    m.options.forEach(opt => {
-      const btn = document.createElement("button");
-      btn.innerText = opt;
+m.options.forEach(o => {
 
-      btn.onclick = () => {
-        selected[m.id] = opt;
-        render();
-      };
+let isSelected = state[m.id] === o.name;
 
-      div.appendChild(btn);
-    });
+html += `
+<div class="option">
+<span class="${o.rec ? 'recommended':''}">
+${o.name} (${o.score}/10)
+</span>
+${isSelected ? '✔️':''}
+<button onclick="select('${m.id}','${o.name}')">Choisir</button>
+<div>${o.desc}</div>
+</div>
+`;
 
-    root.appendChild(div);
-  });
+});
+
+html += "</div>";
+
+});
+
+document.getElementById("app").innerHTML = html;
+
+generatePlan();
 }
 
-function setRecommended(){
-  selected = {
-    orchestrator:"Node-RED",
-    llm:"OpenAI",
-    memory:"Qdrant"
-  };
-  render();
+function select(id,name){
+state[id]=name;
+render();
+}
+
+function setScenario(type){
+
+if(type==="simple"){
+state={
+orchestrator:"Node-RED",
+llm:"OpenAI",
+memory:"Qdrant"
+};
+}
+
+if(type==="advanced"){
+state={
+orchestrator:"LangGraph",
+llm:"Hybride",
+memory:"Qdrant"
+};
+}
+
+render();
+}
+
+function generatePlan(){
+
+let plan = "Architecture sélectionnée:\n\n";
+
+modules.forEach(m=>{
+plan += `${m.name} : ${state[m.id] || "non défini"}\n`;
+});
+
+plan += "\nPlan:\n";
+
+plan += "1. Installer orchestrateur\n";
+plan += "2. Connecter LLM\n";
+plan += "3. Ajouter mémoire\n";
+plan += "4. Tester flux\n";
+
+plan += "\nAnalyse:\n";
+
+let total = 0;
+let count = 0;
+
+modules.forEach(m=>{
+let opt = m.options.find(o=>o.name===state[m.id]);
+if(opt){
+total += opt.score;
+count++;
+}
+});
+
+if(count>0){
+let avg = total/count;
+plan += `Score global: ${avg.toFixed(1)}/10\n`;
+
+if(avg>8){
+plan += "Architecture solide\n";
+}else{
+plan += "Architecture moyenne\n";
+}
+}
+
+document.getElementById("plan").textContent = plan;
+
 }
 
 render();
