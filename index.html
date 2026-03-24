@@ -1,56 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DuffCore Architect</title>
+
 <style>
-body { font-family: Arial; background:#0f172a; color:white; padding:20px;}
-.box {background:#1e293b; padding:15px; margin:10px 0; border-radius:10px;}
-button {padding:10px; margin-top:5px;}
-.active {background:green;}
+body {
+  background:#0b1220;
+  color:white;
+  font-family:Arial;
+  padding:20px;
+}
+
+.module {
+  background:#18233b;
+  padding:15px;
+  margin-bottom:10px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.selected {
+  border:2px solid #4f8cff;
+}
+
+button {
+  margin:5px;
+  padding:10px;
+}
 </style>
 </head>
+
 <body>
 
 <h1>DuffCore Architect</h1>
 
+<button onclick="setRecommended()">Mode recommandé</button>
+
 <div id="modules"></div>
-<div id="details"></div>
 
 <script>
-let selected = null
-let choices = {}
 
 const modules = [
-{ id:"orchestrator", name:"Orchestrateur", options:["Node-RED","LangGraph","n8n"]},
-{ id:"llm", name:"LLM", options:["OpenAI","Ollama"]},
-{ id:"memory", name:"Mémoire", options:["Qdrant","Chroma"]},
-]
+  {
+    id:"orchestrator",
+    name:"Orchestrateur",
+    options:["Node-RED","LangGraph","n8n"]
+  },
+  {
+    id:"llm",
+    name:"LLM",
+    options:["OpenAI","Ollama","Hybride"]
+  },
+  {
+    id:"memory",
+    name:"Mémoire",
+    options:["Qdrant","Chroma","SQLite"]
+  }
+];
 
-function render(){
-let mhtml=""
-modules.forEach(m=>{
-mhtml+=`<div class="box" onclick="select('${m.id}')">${m.name} : ${choices[m.id]||"non défini"}</div>`
-})
-document.getElementById("modules").innerHTML=mhtml
+let selected = {};
 
-if(selected){
-let mod = modules.find(x=>x.id===selected)
-let dhtml=`<h2>${mod.name}</h2>`
-mod.options.forEach(o=>{
-dhtml+=`<div class="box">
-${o}
-<button onclick="choose('${mod.id}','${o}')">Choisir</button>
-</div>`
-})
-document.getElementById("details").innerHTML=dhtml
+function render() {
+  const root = document.getElementById("modules");
+  root.innerHTML = "";
+
+  modules.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "module";
+
+    const current = selected[m.id] || "non défini";
+
+    div.innerHTML = `
+      <h3>${m.name}</h3>
+      <p>Actif : ${current}</p>
+    `;
+
+    m.options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.innerText = opt;
+
+      btn.onclick = () => {
+        selected[m.id] = opt;
+        render();
+      };
+
+      div.appendChild(btn);
+    });
+
+    root.appendChild(div);
+  });
 }
+
+function setRecommended(){
+  selected = {
+    orchestrator:"Node-RED",
+    llm:"OpenAI",
+    memory:"Qdrant"
+  };
+  render();
 }
 
-function select(id){selected=id; render()}
-function choose(id,val){choices[id]=val; render()}
+render();
 
-render()
 </script>
 
 </body>
