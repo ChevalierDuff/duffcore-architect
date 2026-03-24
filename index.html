@@ -3,60 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DuffCore Architect V3</title>
+<title>DuffCore Architect V4</title>
 
 <style>
 body {
   background:#0b1220;
   color:white;
   font-family:Arial;
-  padding:20px;
+  padding:15px;
 }
 
-.module {
+details {
   background:#18233b;
-  padding:15px;
-  margin-bottom:15px;
+  margin-bottom:10px;
+  padding:10px;
   border-radius:10px;
 }
 
-.option {
-  margin:5px 0;
-}
-
-button {
-  margin-left:10px;
-}
-
-.recommended {
-  color:#56d3b0;
-}
-
-.selected {
-  color:#4f8cff;
+select {
+  width:100%;
+  padding:10px;
+  margin-top:10px;
 }
 
 .plan {
   background:#111a30;
   padding:15px;
-  margin-top:20px;
   border-radius:10px;
+  position:sticky;
+  bottom:0;
 }
-</style>
 
+h1 { font-size:22px; }
+
+</style>
 </head>
 
 <body>
 
-<h1>DuffCore Architect V3</h1>
+<h1>DuffCore Architect</h1>
 
-<button onclick="setScenario('simple')">Scénario simple</button>
-<button onclick="setScenario('advanced')">Scénario avancé</button>
-
-<div id="app"></div>
+<div id="modules"></div>
 
 <div class="plan">
-<h2>Plan généré</h2>
+<h3>Plan</h3>
 <pre id="plan"></pre>
 </div>
 
@@ -66,29 +56,17 @@ const modules = [
 {
 id:"orchestrator",
 name:"Orchestrateur",
-options:[
-{name:"Node-RED", score:8, desc:"simple et visuel", rec:true},
-{name:"LangGraph", score:10, desc:"puissant mais complexe"},
-{name:"n8n", score:7, desc:"bon pour automatisation"}
-]
+options:["Node-RED","LangGraph","n8n"]
 },
 {
 id:"llm",
 name:"LLM",
-options:[
-{name:"OpenAI", score:9, desc:"stable et performant", rec:true},
-{name:"Ollama", score:7, desc:"local"},
-{name:"Hybride", score:10, desc:"flexible"}
-]
+options:["OpenAI","Ollama","Hybride"]
 },
 {
 id:"memory",
 name:"Mémoire",
-options:[
-{name:"Qdrant", score:9, desc:"vectoriel robuste", rec:true},
-{name:"Chroma", score:7, desc:"simple"},
-{name:"SQLite", score:6, desc:"basique"}
-]
+options:["Qdrant","Chroma","SQLite"]
 }
 ];
 
@@ -100,100 +78,44 @@ let html = "";
 
 modules.forEach(m => {
 
-html += `<div class="module"><h2>${m.name}</h2>`;
-
-m.options.forEach(o => {
-
-let isSelected = state[m.id] === o.name;
-
 html += `
-<div class="option">
-<span class="${o.rec ? 'recommended':''}">
-${o.name} (${o.score}/10)
-</span>
-${isSelected ? '✔️':''}
-<button onclick="select('${m.id}','${o.name}')">Choisir</button>
-<div>${o.desc}</div>
-</div>
+<details>
+<summary>${m.name} (${state[m.id] || "choisir"})</summary>
+
+<select onchange="select('${m.id}', this.value)">
+<option value="">-- choisir --</option>
+${m.options.map(o => `<option ${state[m.id]===o?"selected":""}>${o}</option>`).join("")}
+</select>
+
+</details>
 `;
 
 });
 
-html += "</div>";
-
-});
-
-document.getElementById("app").innerHTML = html;
+document.getElementById("modules").innerHTML = html;
 
 generatePlan();
 }
 
-function select(id,name){
-state[id]=name;
-render();
-}
-
-function setScenario(type){
-
-if(type==="simple"){
-state={
-orchestrator:"Node-RED",
-llm:"OpenAI",
-memory:"Qdrant"
-};
-}
-
-if(type==="advanced"){
-state={
-orchestrator:"LangGraph",
-llm:"Hybride",
-memory:"Qdrant"
-};
-}
-
+function select(id,value){
+state[id] = value;
 render();
 }
 
 function generatePlan(){
 
-let plan = "Architecture sélectionnée:\n\n";
+let text = "Architecture:\n\n";
 
 modules.forEach(m=>{
-plan += `${m.name} : ${state[m.id] || "non défini"}\n`;
+text += `${m.name} : ${state[m.id] || "non défini"}\n`;
 });
 
-plan += "\nPlan:\n";
+text += "\nÉtapes:\n";
+text += "1. Orchestrateur\n";
+text += "2. LLM\n";
+text += "3. Mémoire\n";
 
-plan += "1. Installer orchestrateur\n";
-plan += "2. Connecter LLM\n";
-plan += "3. Ajouter mémoire\n";
-plan += "4. Tester flux\n";
-
-plan += "\nAnalyse:\n";
-
-let total = 0;
-let count = 0;
-
-modules.forEach(m=>{
-let opt = m.options.find(o=>o.name===state[m.id]);
-if(opt){
-total += opt.score;
-count++;
-}
-});
-
-if(count>0){
-let avg = total/count;
-plan += `Score global: ${avg.toFixed(1)}/10\n`;
-
-if(avg>8){
-plan += "Architecture solide\n";
-}else{
-plan += "Architecture moyenne\n";
-}
-}
-
-document.getElementById("plan").textContent = plan;
+document.getElementById("plan").textContent = text;
 
 }
 
