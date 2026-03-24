@@ -3,124 +3,557 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DuffCore Architect V4</title>
-
+<title>DuffCore Architect V7</title>
 <style>
-body {
-  background:#0b1220;
-  color:white;
-  font-family:Arial;
-  padding:15px;
+:root{
+  --bg:#0b1220;
+  --panel:#16233b;
+  --panel2:#111a30;
+  --border:#2d446d;
+  --text:#eef4ff;
+  --muted:#a9b7d1;
+  --accent:#4f8cff;
+  --good:#56d3b0;
+  --warn:#ffcc66;
 }
-
-details {
-  background:#18233b;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:15px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial, sans-serif;
+}
+h1,h2,h3{margin:0 0 10px 0}
+.section{
+  background:var(--panel2);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
+  border:1px solid var(--border);
+}
+details{
+  background:var(--panel);
   margin-bottom:10px;
   padding:10px;
   border-radius:10px;
+  border:1px solid var(--border);
 }
-
-select {
+summary{
+  cursor:pointer;
+  font-weight:bold;
+}
+select,input,textarea,button{
   width:100%;
   padding:10px;
-  margin-top:10px;
-}
-
-.plan {
-  background:#111a30;
-  padding:15px;
+  margin-top:8px;
   border-radius:10px;
-  position:sticky;
-  bottom:0;
+  border:1px solid var(--border);
+  background:#0f1a2d;
+  color:var(--text);
 }
-
-h1 { font-size:22px; }
-
+button{
+  cursor:pointer;
+  background:#183058;
+}
+button:hover{
+  filter:brightness(1.08);
+}
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+@media (max-width:900px){
+  .row{grid-template-columns:1fr;}
+}
+.small{font-size:13px;color:var(--muted)}
+.good{color:var(--good)}
+.warn{color:var(--warn)}
+.config{
+  background:var(--panel);
+  padding:10px;
+  border-radius:10px;
+  margin-top:8px;
+  border:1px solid var(--border);
+}
+.config-name{
+  font-weight:bold;
+  margin-bottom:8px;
+}
+.inline-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+}
+.compare-box{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  margin-top:8px;
+}
+pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+  background:#0d1628;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  overflow:auto;
+}
+.graph-wrap{
+  overflow:auto;
+}
+svg{
+  width:100%;
+  min-width:700px;
+  height:320px;
+  background:#0d1628;
+  border-radius:12px;
+  border:1px solid var(--border);
+}
+.node{
+  fill:#18233b;
+  stroke:#4f8cff;
+  stroke-width:2;
+}
+.node-text{
+  fill:#eef4ff;
+  font-size:13px;
+  font-weight:bold;
+}
+.edge{
+  stroke:#395c95;
+  stroke-width:2;
+}
+.tag{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  margin-right:6px;
+  margin-top:6px;
+  font-size:12px;
+  color:var(--muted);
+}
 </style>
 </head>
-
 <body>
 
-<h1>DuffCore Architect</h1>
+<div class="section">
+  <h1>DuffCore Architect V7</h1>
+  <div class="small">Version unifiée : choix, mémoire, comparaison, export, graphe et plan. Ce n’est pas encore DuffCore runtime. C’est le cerveau de décision de ton architecture.</div>
+</div>
 
-<div id="modules"></div>
+<div class="section">
+  <h2>Choix de l’architecture</h2>
+  <div id="modules"></div>
+</div>
 
-<div class="plan">
-<h3>Plan</h3>
-<pre id="plan"></pre>
+<div class="section">
+  <h2>Actions rapides</h2>
+  <button onclick="applyScenario('simple')">Scénario simple</button>
+  <button onclick="applyScenario('hybrid')">Scénario hybride</button>
+  <button onclick="applyScenario('advanced')">Scénario avancé</button>
+  <button onclick="resetState()">Réinitialiser l’architecture courante</button>
+</div>
+
+<div class="section">
+  <h2>Sauvegarde des configurations</h2>
+  <input id="configName" placeholder="Nom de la configuration">
+  <button onclick="saveConfig()">Sauvegarder la configuration actuelle</button>
+  <div id="configs"></div>
+</div>
+
+<div class="section">
+  <h2>Comparaison entre deux configurations</h2>
+  <select id="compareA" onchange="renderComparison()"></select>
+  <select id="compareB" onchange="renderComparison()"></select>
+  <div id="comparison"></div>
+</div>
+
+<div class="section">
+  <h2>Vue graphe utile</h2>
+  <div class="small">Le graphe ne sert pas ici à faire joli. Il sert à voir la chaîne fonctionnelle sélectionnée.</div>
+  <div class="graph-wrap">
+    <svg viewBox="0 0 900 320">
+      <line class="edge" x1="120" y1="160" x2="270" y2="160"></line>
+      <line class="edge" x1="350" y1="160" x2="500" y2="160"></line>
+      <line class="edge" x1="580" y1="160" x2="730" y2="160"></line>
+      <rect class="node" x="40" y="120" rx="14" ry="14" width="160" height="80"></rect>
+      <rect class="node" x="270" y="120" rx="14" ry="14" width="160" height="80"></rect>
+      <rect class="node" x="500" y="120" rx="14" ry="14" width="160" height="80"></rect>
+      <rect class="node" x="730" y="120" rx="14" ry="14" width="130" height="80"></rect>
+
+      <text class="node-text" x="120" y="145" text-anchor="middle">Communication</text>
+      <text class="node-text" x="120" y="168" text-anchor="middle" id="graph-communication">—</text>
+
+      <text class="node-text" x="350" y="145" text-anchor="middle">Orchestrateur</text>
+      <text class="node-text" x="350" y="168" text-anchor="middle" id="graph-orchestrator">—</text>
+
+      <text class="node-text" x="580" y="145" text-anchor="middle">LLM</text>
+      <text class="node-text" x="580" y="168" text-anchor="middle" id="graph-llm">—</text>
+
+      <text class="node-text" x="795" y="145" text-anchor="middle">Mémoire</text>
+      <text class="node-text" x="795" y="168" text-anchor="middle" id="graph-memory">—</text>
+    </svg>
+  </div>
+  <div style="margin-top:10px">
+    <span class="tag" id="tag-action">Action : —</span>
+    <span class="tag" id="tag-monitoring">Monitoring : —</span>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Analyse DuffCore</h2>
+  <pre id="analysis"></pre>
+</div>
+
+<div class="section">
+  <h2>Export JSON</h2>
+  <button onclick="copyJson()">Copier le JSON</button>
+  <textarea id="jsonExport" rows="12" readonly></textarea>
 </div>
 
 <script>
-
 const modules = [
-{
-id:"orchestrator",
-name:"Orchestrateur",
-options:["Node-RED","LangGraph","n8n"]
-},
-{
-id:"llm",
-name:"LLM",
-options:["OpenAI","Ollama","Hybride"]
-},
-{
-id:"memory",
-name:"Mémoire",
-options:["Qdrant","Chroma","SQLite"]
-}
+  {
+    id:"communication",
+    name:"Communication",
+    why:"Canal utilisateur principal. Sans une entrée claire, le système est pénible à piloter.",
+    options:{
+      "Telegram":{score:9, note:"Très bon pour accès mobile rapide."},
+      "Web UI":{score:9, note:"Idéal pour un outil visuel plus riche."},
+      "CLI":{score:6, note:"Très utile pour tests techniques, mais faible ergonomie mobile."}
+    }
+  },
+  {
+    id:"orchestrator",
+    name:"Orchestrateur",
+    why:"Coordonne les flux, les étapes et les décisions entre modules.",
+    options:{
+      "Node-RED":{score:8, note:"Très bon pour prototypage visuel et intégration pragmatique."},
+      "LangGraph":{score:10, note:"Excellent pour agents stateful et logique complexe."},
+      "n8n":{score:7, note:"Fort pour automatisation et connecteurs."}
+    }
+  },
+  {
+    id:"llm",
+    name:"LLM",
+    why:"Cœur du raisonnement, de la compréhension et de la génération.",
+    options:{
+      "OpenAI":{score:9, note:"Fiable, rapide, simple pour démarrer."},
+      "Ollama":{score:7, note:"Local et autonome, mais plus exigeant techniquement."},
+      "Hybride":{score:10, note:"Très bon compromis si tu assumes la complexité."}
+    }
+  },
+  {
+    id:"memory",
+    name:"Mémoire",
+    why:"Garde le contexte, les décisions, les documents et les traces utiles.",
+    options:{
+      "Qdrant":{score:9, note:"Très bon pour mémoire vectorielle sérieuse."},
+      "Chroma":{score:7, note:"Rapide à tester, plus léger pour prototypage."},
+      "SQLite":{score:6, note:"Excellent pour état structuré, limité pour vectoriel avancé."}
+    }
+  },
+  {
+    id:"action",
+    name:"Action",
+    why:"Couche d’exécution : scripts, APIs, outils, système.",
+    options:{
+      "Python scripts":{score:9, note:"Très bon pour DuffCore, souple et lisible."},
+      "Node tools":{score:7, note:"Cohérent si ton orchestration reste côté JS."},
+      "HTTP/API only":{score:6, note:"Simple mais plus limité."}
+    }
+  },
+  {
+    id:"monitoring",
+    name:"Monitoring",
+    why:"Permet de voir ce qui se passe au lieu de deviner.",
+    options:{
+      "Logs simples":{score:8, note:"Très bon point de départ."},
+      "LangSmith":{score:8, note:"Très utile si ton stack va vers LangChain."},
+      "Grafana stack":{score:6, note:"Puissant mais excessif pour cette phase."}
+    }
+  }
 ];
 
 let state = {};
+let configs = JSON.parse(localStorage.getItem("duffcore_architect_configs") || "{}");
 
-function render(){
-
-let html = "";
-
-modules.forEach(m => {
-
-html += `
-<details>
-<summary>${m.name} (${state[m.id] || "choisir"})</summary>
-
-<select onchange="select('${m.id}', this.value)">
-<option value="">-- choisir --</option>
-${m.options.map(o => `<option ${state[m.id]===o?"selected":""}>${o}</option>`).join("")}
-</select>
-
-</details>
-`;
-
-});
-
-document.getElementById("modules").innerHTML = html;
-
-generatePlan();
+function getModuleById(id){
+  return modules.find(m => m.id === id);
 }
 
-function select(id,value){
-state[id] = value;
-render();
+function renderModules(){
+  let html = "";
+  modules.forEach(m => {
+    const value = state[m.id] || "";
+    html += `
+      <details>
+        <summary>${m.name} (${value || "choisir"})</summary>
+        <div class="small" style="margin-top:8px">${m.why}</div>
+        <select onchange="selectOption('${m.id}', this.value)">
+          <option value="">-- choisir --</option>
+          ${Object.keys(m.options).map(opt => `
+            <option value="${opt}" ${value===opt ? "selected" : ""}>${opt} — ${m.options[opt].score}/10</option>
+          `).join("")}
+        </select>
+        <div class="small" style="margin-top:8px">${value ? m.options[value].note : "Aucune option choisie pour le moment."}</div>
+      </details>
+    `;
+  });
+  document.getElementById("modules").innerHTML = html;
 }
 
-function generatePlan(){
-
-let text = "Architecture:\n\n";
-
-modules.forEach(m=>{
-text += `${m.name} : ${state[m.id] || "non défini"}\n`;
-});
-
-text += "\nÉtapes:\n";
-text += "1. Orchestrateur\n";
-text += "2. LLM\n";
-text += "3. Mémoire\n";
-
-document.getElementById("plan").textContent = text;
-
+function selectOption(id, value){
+  state[id] = value;
+  renderAll();
 }
 
-render();
+function resetState(){
+  state = {};
+  renderAll();
+}
 
+function applyScenario(type){
+  if(type === "simple"){
+    state = {
+      communication:"Telegram",
+      orchestrator:"Node-RED",
+      llm:"OpenAI",
+      memory:"SQLite",
+      action:"Python scripts",
+      monitoring:"Logs simples"
+    };
+  }
+  if(type === "hybrid"){
+    state = {
+      communication:"Telegram",
+      orchestrator:"Node-RED",
+      llm:"Hybride",
+      memory:"Qdrant",
+      action:"Python scripts",
+      monitoring:"Logs simples"
+    };
+  }
+  if(type === "advanced"){
+    state = {
+      communication:"Web UI",
+      orchestrator:"LangGraph",
+      llm:"Hybride",
+      memory:"Qdrant",
+      action:"Python scripts",
+      monitoring:"LangSmith"
+    };
+  }
+  renderAll();
+}
+
+function computeAnalysis(){
+  let text = "Architecture courante\\n\\n";
+  let total = 0;
+  let count = 0;
+
+  modules.forEach(m => {
+    const v = state[m.id];
+    if(v){
+      const score = m.options[v].score;
+      total += score;
+      count += 1;
+      text += m.name + " : " + v + " (" + score + "/10)\\n";
+    } else {
+      text += m.name + " : non défini\\n";
+    }
+  });
+
+  if(count > 0){
+    const avg = total / count;
+    text += "\\nScore global : " + avg.toFixed(1) + "/10\\n";
+    if(avg >= 8.5){
+      text += "Statut : solide\\n";
+    } else if(avg >= 7){
+      text += "Statut : correct mais améliorable\\n";
+    } else {
+      text += "Statut : fragile\\n";
+    }
+  }
+
+  text += "\\nRecommandations dynamiques\\n";
+
+  if(state.llm === "Ollama"){
+    text += "- Ollama choisi : prévoir installation locale, modèles, gestion GPU/RAM.\\n";
+  }
+  if(state.orchestrator === "LangGraph"){
+    text += "- LangGraph choisi : bon pour agentique sérieuse, mais la complexité de conception monte.\\n";
+  }
+  if(state.memory === "SQLite"){
+    text += "- SQLite choisi : bon pour MVP structuré, mais faible pour mémoire vectorielle avancée.\\n";
+  }
+  if(state.communication === "CLI"){
+    text += "- CLI choisi : adapté au debug, mauvais confort d’usage mobile.\\n";
+  }
+  if(state.communication === "Web UI" && state.orchestrator === "Node-RED"){
+    text += "- Web UI + Node-RED : bon couple si tu veux pilotage visuel et prototypage rapide.\\n";
+  }
+  if(state.memory === "Qdrant" && state.llm === "Hybride"){
+    text += "- Qdrant + Hybride : bonne base pour DuffCore plus ambitieux.\\n";
+  }
+
+  text += "\\nPlan DuffCore réaliste\\n";
+  text += "1. Verrouiller le canal utilisateur : " + (state.communication || "à choisir") + ".\\n";
+  text += "2. Mettre en place l’orchestrateur : " + (state.orchestrator || "à choisir") + ".\\n";
+  text += "3. Connecter le moteur LLM : " + (state.llm || "à choisir") + ".\\n";
+  text += "4. Brancher la mémoire : " + (state.memory || "à choisir") + ".\\n";
+  text += "5. Ajouter la couche action : " + (state.action || "à choisir") + ".\\n";
+  text += "6. Ajouter observabilité : " + (state.monitoring || "à choisir") + ".\\n";
+
+  return text;
+}
+
+function renderAnalysis(){
+  document.getElementById("analysis").textContent = computeAnalysis();
+}
+
+function currentConfigObject(){
+  return {
+    meta:{
+      name:"current",
+      generated_at:new Date().toISOString()
+    },
+    architecture:{...state}
+  };
+}
+
+function renderJson(){
+  document.getElementById("jsonExport").value = JSON.stringify(currentConfigObject(), null, 2);
+}
+
+function copyJson(){
+  const area = document.getElementById("jsonExport");
+  area.select();
+  area.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+}
+
+function saveConfig(){
+  const input = document.getElementById("configName");
+  const name = input.value.trim();
+  if(!name){
+    alert("Donne un nom à la configuration.");
+    return;
+  }
+  configs[name] = JSON.parse(JSON.stringify(state));
+  localStorage.setItem("duffcore_architect_configs", JSON.stringify(configs));
+  input.value = "";
+  renderConfigs();
+  renderCompareSelectors();
+}
+
+function loadConfig(name){
+  state = JSON.parse(JSON.stringify(configs[name]));
+  renderAll();
+}
+
+function deleteConfig(name){
+  delete configs[name];
+  localStorage.setItem("duffcore_architect_configs", JSON.stringify(configs));
+  renderConfigs();
+  renderCompareSelectors();
+  renderComparison();
+}
+
+function renderConfigs(){
+  const root = document.getElementById("configs");
+  const names = Object.keys(configs);
+  if(names.length === 0){
+    root.innerHTML = '<div class="small">Aucune configuration sauvegardée.</div>';
+    return;
+  }
+  root.innerHTML = names.map(name => `
+    <div class="config">
+      <div class="config-name">${name}</div>
+      <div class="inline-actions">
+        <button onclick="loadConfig('${escapeJs(name)}')">Charger</button>
+        <button onclick="fillCompareA('${escapeJs(name)}')">Mettre en A</button>
+        <button onclick="deleteConfig('${escapeJs(name)}')">Supprimer</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function escapeJs(str){
+  return str.replace(/'/g, "\\'");
+}
+
+function fillCompareA(name){
+  document.getElementById("compareA").value = name;
+  renderComparison();
+}
+
+function renderCompareSelectors(){
+  const names = Object.keys(configs);
+  const options = ['<option value="">-- choisir une config --</option>']
+    .concat(names.map(n => `<option value="${n}">${n}</option>`))
+    .join("");
+  document.getElementById("compareA").innerHTML = options;
+  document.getElementById("compareB").innerHTML = options;
+}
+
+function renderComparison(){
+  const aName = document.getElementById("compareA").value;
+  const bName = document.getElementById("compareB").value;
+  const root = document.getElementById("comparison");
+
+  if(!aName || !bName){
+    root.innerHTML = '<div class="small">Choisis deux configurations pour comparer.</div>';
+    return;
+  }
+
+  const a = configs[aName] || {};
+  const b = configs[bName] || {};
+
+  let html = `<div class="compare-box"><strong>${aName}</strong> vs <strong>${bName}</strong></div>`;
+
+  modules.forEach(m => {
+    const av = a[m.id] || "non défini";
+    const bv = b[m.id] || "non défini";
+    const same = av === bv;
+    html += `
+      <div class="compare-box">
+        <div><strong>${m.name}</strong></div>
+        <div>A : ${av}</div>
+        <div>B : ${bv}</div>
+        <div class="${same ? 'good' : 'warn'}">${same ? 'Identique' : 'Différent'}</div>
+      </div>
+    `;
+  });
+
+  root.innerHTML = html;
+}
+
+function renderGraph(){
+  document.getElementById("graph-communication").textContent = state.communication || "—";
+  document.getElementById("graph-orchestrator").textContent = state.orchestrator || "—";
+  document.getElementById("graph-llm").textContent = state.llm || "—";
+  document.getElementById("graph-memory").textContent = state.memory || "—";
+  document.getElementById("tag-action").textContent = "Action : " + (state.action || "—");
+  document.getElementById("tag-monitoring").textContent = "Monitoring : " + (state.monitoring || "—");
+}
+
+function renderAll(){
+  renderModules();
+  renderAnalysis();
+  renderJson();
+  renderConfigs();
+  renderCompareSelectors();
+  renderComparison();
+  renderGraph();
+}
+
+renderAll();
 </script>
 
 </body>
