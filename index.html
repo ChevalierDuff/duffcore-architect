@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DuffCore Architect</title>
+<style>
+body { font-family: Arial; background:#0f172a; color:white; padding:20px;}
+.box {background:#1e293b; padding:15px; margin:10px 0; border-radius:10px;}
+button {padding:10px; margin-top:5px;}
+.active {background:green;}
+</style>
+</head>
+<body>
+
+<h1>DuffCore Architect</h1>
+
+<div id="modules"></div>
+<div id="details"></div>
+
+<script>
+let selected = null
+let choices = {}
+
+const modules = [
+{ id:"orchestrator", name:"Orchestrateur", options:["Node-RED","LangGraph","n8n"]},
+{ id:"llm", name:"LLM", options:["OpenAI","Ollama"]},
+{ id:"memory", name:"Mémoire", options:["Qdrant","Chroma"]},
+]
+
+function render(){
+let mhtml=""
+modules.forEach(m=>{
+mhtml+=`<div class="box" onclick="select('${m.id}')">${m.name} : ${choices[m.id]||"non défini"}</div>`
+})
+document.getElementById("modules").innerHTML=mhtml
+
+if(selected){
+let mod = modules.find(x=>x.id===selected)
+let dhtml=`<h2>${mod.name}</h2>`
+mod.options.forEach(o=>{
+dhtml+=`<div class="box">
+${o}
+<button onclick="choose('${mod.id}','${o}')">Choisir</button>
+</div>`
+})
+document.getElementById("details").innerHTML=dhtml
+}
+}
+
+function select(id){selected=id; render()}
+function choose(id,val){choices[id]=val; render()}
+
+render()
+</script>
+
+</body>
+</html>
