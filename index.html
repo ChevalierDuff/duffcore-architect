@@ -3,172 +3,50 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DuffCore Architect V12</title>
+<title>DuffCore Architect V13</title>
 <style>
 :root{
-  --bg:#0b1220;
-  --panel:#121c30;
-  --panel2:#17243d;
-  --border:#2b426b;
-  --text:#eef4ff;
-  --muted:#a9b6d1;
-  --good:#56d3b0;
-  --warn:#ffcc66;
-  --bad:#ff7d7d;
-  --accent:#4f8cff;
+  --bg:#0b1220; --panel:#121c30; --panel2:#17243d; --panel3:#0f182b; --border:#2b426b;
+  --text:#eef4ff; --muted:#a9b6d1; --good:#56d3b0; --warn:#ffcc66; --bad:#ff7d7d; --accent:#4f8cff;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  padding:12px;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,sans-serif;
-}
+body{margin:0;padding:12px;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 h1,h2,h3{margin:0 0 10px 0}
-.section{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:14px;
-}
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-@media (max-width:950px){
-  .row{grid-template-columns:1fr;}
-}
+.section{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:980px){.row{grid-template-columns:1fr}}
 .small{font-size:13px;color:var(--muted)}
-.good{color:var(--good)}
-.warn{color:var(--warn)}
-.bad{color:var(--bad)}
-pre{
-  white-space:pre-wrap;
-  word-break:break-word;
-  background:#0d1628;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:12px;
-  overflow:auto;
-}
-details{
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:8px;
-  margin-bottom:8px;
-}
+pre{white-space:pre-wrap;word-break:break-word;background:#0d1628;border:1px solid var(--border);border-radius:10px;padding:12px;overflow:auto}
+details{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:8px;margin-bottom:8px}
 summary{cursor:pointer;font-weight:bold}
-select, button, input, textarea{
-  width:100%;
-  margin-top:8px;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:#0f182b;
-  color:var(--text);
-}
+select,button{width:100%;margin-top:8px;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--panel3);color:var(--text)}
 button{cursor:pointer;background:#1d335b}
-.kpis{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:8px;
-  margin-top:10px;
-}
-@media (max-width:800px){
-  .kpis{grid-template-columns:1fr;}
-}
-.kpi{
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:10px;
-}
-.layer-title{
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  font-size:12px;
-  color:#b8c5e2;
-  margin:8px 0 10px 0;
-}
-.pill{
-  display:inline-block;
-  padding:4px 8px;
-  border:1px solid var(--border);
-  border-radius:999px;
-  font-size:12px;
-  margin:4px 6px 0 0;
-  color:var(--muted);
-}
-.iface-card{
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:10px;
-  margin-bottom:8px;
-}
-.iface-head{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  align-items:center;
-}
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+@media (max-width:800px){.kpis{grid-template-columns:1fr}}
+.kpi{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px}
+.layer-title{text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:#b8c5e2;margin:10px 0}
+.pill{display:inline-block;padding:4px 8px;border:1px solid var(--border);border-radius:999px;font-size:12px;margin:4px 6px 0 0;color:var(--muted)}
+.iface-card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px}
+.iface-head{display:flex;justify-content:space-between;gap:8px;align-items:center}
 .iface-name{font-weight:bold}
-.iface-cap{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:6px;
-}
-.cap{
-  font-size:11px;
-  padding:3px 7px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  color:var(--muted);
-}
-svg{
-  width:100%;
-  min-width:980px;
-  height:520px;
-  background:#0d1628;
-  border:1px solid var(--border);
-  border-radius:12px;
-}
+.iface-cap{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.cap{font-size:11px;padding:3px 7px;border-radius:999px;border:1px solid var(--border);color:var(--muted)}
+.tree-wrap{background:#0d1628;border:1px solid var(--border);border-radius:12px;padding:12px}
+.tree-node{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px}
+.tree-title{font-weight:bold;cursor:pointer}
+.tree-children{margin-top:8px;margin-left:14px;border-left:2px solid #2b426b;padding-left:10px}
+.tree-meta{margin-top:6px;font-size:12px;color:var(--muted)}
+.tree-btn{margin-top:6px;width:auto;padding:6px 10px;display:inline-block}
+svg{width:100%;min-width:980px;height:520px;background:#0d1628;border:1px solid var(--border);border-radius:12px}
 .edge{stroke:#3e6097;stroke-width:2}
 .node{fill:#18253f;stroke:#4f8cff;stroke-width:2}
 .nodeText{fill:#eef4ff;font-size:12px;font-weight:bold}
 .nodeSub{fill:#9fb0d0;font-size:11px}
-.flowbox{
-  background:#0d1628;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-}
-.flow-step{
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:10px;
-  margin-top:8px;
-}
-.flow-nav{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:8px;
-  margin-top:10px;
-}
+.flowbox{background:#0d1628;border:1px solid var(--border);border-radius:12px;padding:12px}
+.flow-step{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:8px}
+.flow-nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
 .version{margin-top:6px;font-size:13px;color:var(--muted)}
-.notice{
-  background:#151f34;
-  border-left:4px solid var(--warn);
-  padding:10px;
-  border-radius:8px;
-  margin-top:8px;
-}
+.code-box{background:#0d1628;border:1px solid var(--border);border-radius:10px;padding:12px;min-height:220px}
 </style>
 </head>
 <body>
@@ -176,13 +54,13 @@ svg{
 <div class="section">
   <h1>DuffCore Architect</h1>
   <div class="version" id="versionLine"></div>
-  <div class="small">V12 : base structurée en modèle + moteur + interface. Interfaces utilisateur multi-sélection, visualisation rétablie, scénarios et simulation de flux.</div>
+  <div class="small">V13 : modules renommÃ©s plus clairement, structure hiÃ©rarchique cliquable, base pour explorer jusquâaux fichiers et au code.</div>
 </div>
 
 <div class="section">
   <h2>Mode et profil</h2>
   <select id="modeSelect" onchange="UI.setMode(this.value)">
-    <option value="guide">Guidé</option>
+    <option value="guide">GuidÃ©</option>
     <option value="explore">Exploration</option>
   </select>
   <div id="modeDesc" class="small"></div>
@@ -190,27 +68,27 @@ svg{
   <select id="profileSelect" onchange="UI.setProfile(this.value)">
     <option value="simple">Rapide & simple</option>
     <option value="local">Autonome (local)</option>
-    <option value="advanced">Puissant & évolutif</option>
+    <option value="advanced">Puissant & Ã©volutif</option>
   </select>
   <div id="profileDesc" class="small"></div>
 
-  <button onclick="UI.applyScenario('simple')">Scénario cloud simple</button>
-  <button onclick="UI.applyScenario('local')">Scénario local autonome</button>
-  <button onclick="UI.applyScenario('advanced')">Scénario agentique avancée</button>
-  <button onclick="UI.reset()">Réinitialiser</button>
+  <button onclick="UI.applyScenario('simple')">ScÃ©nario cloud simple</button>
+  <button onclick="UI.applyScenario('local')">ScÃ©nario local autonome</button>
+  <button onclick="UI.applyScenario('advanced')">ScÃ©nario agentique avancÃ©e</button>
+  <button onclick="UI.reset()">RÃ©initialiser</button>
 
   <div class="kpis">
     <div class="kpi"><strong>Score global</strong><div id="scoreBox" class="small"></div></div>
     <div class="kpi"><strong>Statut</strong><div id="statusBox" class="small"></div></div>
-    <div class="kpi"><strong>Incohérences</strong><div id="issuesBox" class="small"></div></div>
+    <div class="kpi"><strong>IncohÃ©rences</strong><div id="issuesBox" class="small"></div></div>
   </div>
 </div>
 
 <div class="row">
   <div>
     <div class="section">
-      <h2>Interfaces utilisateur</h2>
-      <div class="small">Ici, on ne choisit pas une seule interface. On active plusieurs canaux d’entrée/sortie possibles.</div>
+      <h2>Canaux dâinteraction utilisateur</h2>
+      <div class="small">Un mÃªme canal peut Ãªtre Ã  la fois entrÃ©e et sortie. Tu peux en activer plusieurs en mÃªme temps.</div>
       <div id="interfacesUI"></div>
     </div>
 
@@ -235,83 +113,94 @@ svg{
 </div>
 
 <div class="section">
-  <h2>Visualisation synthèse</h2>
-  <div class="small">La carte montre la chaîne globale et les choix actifs. Les interfaces activées apparaissent dans le bloc dédié.</div>
-  <div style="overflow:auto; margin-top:10px;">
-    <svg viewBox="0 0 1100 520">
-      <line class="edge" x1="170" y1="90" x2="340" y2="90"></line>
-      <line class="edge" x1="420" y1="90" x2="590" y2="90"></line>
-      <line class="edge" x1="670" y1="90" x2="840" y2="90"></line>
-      <line class="edge" x1="920" y1="90" x2="1030" y2="90"></line>
-
-      <line class="edge" x1="590" y1="130" x2="590" y2="280"></line>
-      <line class="edge" x1="840" y1="130" x2="840" y2="280"></line>
-
-      <rect class="node" x="20" y="40" rx="12" ry="12" width="220" height="100"></rect>
-      <rect class="node" x="340" y="50" rx="12" ry="12" width="160" height="80"></rect>
-      <rect class="node" x="590" y="50" rx="12" ry="12" width="160" height="80"></rect>
-      <rect class="node" x="840" y="50" rx="12" ry="12" width="160" height="80"></rect>
-      <rect class="node" x="1010" y="50" rx="12" ry="12" width="70" height="80"></rect>
-
-      <rect class="node" x="510" y="280" rx="12" ry="12" width="160" height="80"></rect>
-      <rect class="node" x="760" y="280" rx="12" ry="12" width="160" height="80"></rect>
-
-      <text class="nodeText" x="130" y="72" text-anchor="middle">Interfaces utilisateur</text>
-      <text class="nodeSub" x="130" y="95" text-anchor="middle" id="graph-interfaces">—</text>
-
-      <text class="nodeText" x="420" y="76" text-anchor="middle">Perception</text>
-      <text class="nodeSub" x="420" y="97" text-anchor="middle" id="graph-perception">—</text>
-
-      <text class="nodeText" x="670" y="76" text-anchor="middle">Interprétation</text>
-      <text class="nodeSub" x="670" y="97" text-anchor="middle" id="graph-interpretation">—</text>
-
-      <text class="nodeText" x="920" y="76" text-anchor="middle">Raisonnement</text>
-      <text class="nodeSub" x="920" y="97" text-anchor="middle" id="graph-reasoning">—</text>
-
-      <text class="nodeText" x="1045" y="76" text-anchor="middle">Action</text>
-      <text class="nodeSub" x="1045" y="97" text-anchor="middle" id="graph-action">—</text>
-
-      <text class="nodeText" x="590" y="306" text-anchor="middle">Mémoire</text>
-      <text class="nodeSub" x="590" y="327" text-anchor="middle" id="graph-memory">—</text>
-
-      <text class="nodeText" x="840" y="306" text-anchor="middle">Orchestrateur</text>
-      <text class="nodeSub" x="840" y="327" text-anchor="middle" id="graph-orchestrator">—</text>
-    </svg>
-  </div>
-  <div style="margin-top:10px;">
-    <span class="pill" id="tag-planning">Planification : —</span>
-    <span class="pill" id="tag-tools">Outils : —</span>
-    <span class="pill" id="tag-security">Sécurité : —</span>
-    <span class="pill" id="tag-monitoring">Monitoring : —</span>
-    <span class="pill" id="tag-introspection">Introspection : —</span>
-  </div>
+  <h2>Explorateur hiÃ©rarchique</h2>
+  <div class="small">Clique sur un module pour voir ses sous-modules. Clique ensuite plus profondÃ©ment jusquâaux fichiers et au code simulÃ©.</div>
+  <div class="tree-wrap" id="treeUI"></div>
 </div>
 
-<div class="section">
-  <h2>Simulation de flux</h2>
-  <select id="flowScenarioSelect" onchange="UI.changeFlow(this.value)">
-    <option value="telegram_image">Telegram → image → analyse → mémoire → réponse</option>
-    <option value="voice_command">Voix → transcription → raisonnement → action</option>
-    <option value="document_ingest">Document → OCR → structuration → mémoire</option>
-  </select>
+<div class="row">
+  <div class="section">
+    <h2>Visualisation synthÃ¨se</h2>
+    <div class="small">La carte montre la chaÃ®ne globale et les choix actifs. Les interfaces activÃ©es apparaissent dans le bloc dÃ©diÃ©.</div>
+    <div style="overflow:auto; margin-top:10px;">
+      <svg viewBox="0 0 1100 520">
+        <line class="edge" x1="170" y1="90" x2="340" y2="90"></line>
+        <line class="edge" x1="420" y1="90" x2="590" y2="90"></line>
+        <line class="edge" x1="670" y1="90" x2="840" y2="90"></line>
+        <line class="edge" x1="920" y1="90" x2="1030" y2="90"></line>
+        <line class="edge" x1="590" y1="130" x2="590" y2="280"></line>
+        <line class="edge" x1="840" y1="130" x2="840" y2="280"></line>
 
-  <div class="flowbox">
-    <div><strong>Étape actuelle</strong></div>
-    <div id="flowCounter" class="small"></div>
-    <div id="flowBox" class="flow-step"></div>
+        <rect class="node" x="20" y="40" rx="12" ry="12" width="220" height="100"></rect>
+        <rect class="node" x="340" y="50" rx="12" ry="12" width="160" height="80"></rect>
+        <rect class="node" x="590" y="50" rx="12" ry="12" width="160" height="80"></rect>
+        <rect class="node" x="840" y="50" rx="12" ry="12" width="160" height="80"></rect>
+        <rect class="node" x="1010" y="50" rx="12" ry="12" width="70" height="80"></rect>
+        <rect class="node" x="510" y="280" rx="12" ry="12" width="160" height="80"></rect>
+        <rect class="node" x="760" y="280" rx="12" ry="12" width="160" height="80"></rect>
 
-    <div class="flow-nav">
-      <button onclick="UI.prevFlow()">Retour</button>
-      <button onclick="UI.nextFlow()">Suivant</button>
-      <button onclick="UI.resetFlow()">Reset</button>
+        <text class="nodeText" x="130" y="72" text-anchor="middle">Interfaces utilisateur</text>
+        <text class="nodeSub" x="130" y="95" text-anchor="middle" id="graph-interfaces">â</text>
+
+        <text class="nodeText" x="420" y="76" text-anchor="middle">Perception & ingestion</text>
+        <text class="nodeSub" x="420" y="97" text-anchor="middle" id="graph-perception">â</text>
+
+        <text class="nodeText" x="670" y="76" text-anchor="middle">ComprÃ©hension</text>
+        <text class="nodeSub" x="670" y="97" text-anchor="middle" id="graph-interpretation">â</text>
+
+        <text class="nodeText" x="920" y="76" text-anchor="middle">Raisonnement</text>
+        <text class="nodeSub" x="920" y="97" text-anchor="middle" id="graph-reasoning">â</text>
+
+        <text class="nodeText" x="1045" y="76" text-anchor="middle">Action</text>
+        <text class="nodeSub" x="1045" y="97" text-anchor="middle" id="graph-action">â</text>
+
+        <text class="nodeText" x="590" y="306" text-anchor="middle">MÃ©moire</text>
+        <text class="nodeSub" x="590" y="327" text-anchor="middle" id="graph-memory">â</text>
+
+        <text class="nodeText" x="840" y="306" text-anchor="middle">Orchestration</text>
+        <text class="nodeSub" x="840" y="327" text-anchor="middle" id="graph-orchestrator">â</text>
+      </svg>
+    </div>
+    <div style="margin-top:10px;">
+      <span class="pill" id="tag-planning">Planification : â</span>
+      <span class="pill" id="tag-tools">Outils : â</span>
+      <span class="pill" id="tag-security">SÃ©curitÃ© : â</span>
+      <span class="pill" id="tag-monitoring">Monitoring : â</span>
+      <span class="pill" id="tag-introspection">Introspection : â</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Simulation de flux</h2>
+    <select id="flowScenarioSelect" onchange="UI.changeFlow(this.value)">
+      <option value="telegram_image">Telegram â image â analyse â mÃ©moire â rÃ©ponse</option>
+      <option value="voice_command">Voix â transcription â raisonnement â action</option>
+      <option value="document_ingest">Document â OCR â structuration â mÃ©moire</option>
+    </select>
+
+    <div class="flowbox">
+      <div><strong>Ãtape actuelle</strong></div>
+      <div id="flowCounter" class="small"></div>
+      <div id="flowBox" class="flow-step"></div>
+
+      <div class="flow-nav">
+        <button onclick="UI.prevFlow()">Retour</button>
+        <button onclick="UI.nextFlow()">Suivant</button>
+        <button onclick="UI.resetFlow()">Reset</button>
+      </div>
     </div>
   </div>
 </div>
 
+<div class="section">
+  <h2>Code simulÃ© du nÅud sÃ©lectionnÃ©</h2>
+  <div class="small">Cette zone affiche le contenu du nÅud actuellement sÃ©lectionnÃ© dans lâexplorateur hiÃ©rarchique.</div>
+  <pre id="codeView" class="code-box"></pre>
+</div>
+
 <script>
 const MODEL = {
-  version: "12.0.0",
-
+  version: "13.0.0",
   interfaces: [
     { id:"telegram", label:"Telegram", input:true, output:true, realtime:true, type:"messaging" },
     { id:"webui", label:"Web UI", input:true, output:true, visual:true, type:"visual" },
@@ -320,459 +209,278 @@ const MODEL = {
     { id:"api", label:"API REST", input:true, output:true, machine:true, type:"api" },
     { id:"discord", label:"Discord", input:true, output:true, realtime:true, type:"messaging" }
   ],
-
   layers: [
-    { name:"Intelligence d'entrée", modules:["perception","interpretation"] },
-    { name:"Cognition", modules:["reasoning","planning"] },
-    { name:"Mémoire & outils", modules:["memory","tools"] },
-    { name:"Exécution", modules:["orchestrator","action"] },
-    { name:"Contrôle", modules:["security","monitoring","introspection"] }
+    { name:"EntrÃ©e utilisateur et acquisition", modules:["perception"] },
+    { name:"ComprÃ©hension et cognition", modules:["interpretation","reasoning","planning"] },
+    { name:"Connaissances, mÃ©moire et outils", modules:["memory","tools"] },
+    { name:"Orchestration et exÃ©cution", modules:["orchestrator","action"] },
+    { name:"SÃ©curitÃ©, observation et introspection", modules:["security","monitoring","introspection"] }
   ],
-
   modules: {
-    perception:{
-      label:"Perception",
-      why:"Capte ce que le système reçoit.",
-      options:["Texte","Whisper","OCR","Multimodal"]
-    },
-    interpretation:{
-      label:"Interprétation",
-      why:"Transforme l’entrée brute en structure exploitable.",
-      options:["Parsing","Classification","Structuration avancée"]
-    },
-    reasoning:{
-      label:"Raisonnement",
-      why:"Cœur cognitif : compréhension, génération, analyse.",
-      options:["OpenAI","Ollama","Hybride"]
-    },
-    planning:{
-      label:"Planification",
-      why:"Découpe un objectif en étapes cohérentes.",
-      options:["Basique","Planner","Agent"]
-    },
-    memory:{
-      label:"Mémoire",
-      why:"Stocke contexte, historique et documents.",
-      options:["SQLite","Chroma","Qdrant"]
-    },
-    tools:{
-      label:"Outils",
-      why:"Boîte à outils auxiliaire appelée par le système.",
-      options:["Simple","OCR+Web","Avancé"]
-    },
-    orchestrator:{
-      label:"Orchestrateur",
-      why:"Coordonne la circulation entre modules.",
-      options:["Node-RED","n8n","LangGraph"]
-    },
-    action:{
-      label:"Action",
-      why:"Exécute scripts, API et actions système.",
-      options:["API","Python","Système"]
-    },
-    security:{
-      label:"Sécurité",
-      why:"Valide permissions et réduit les risques.",
-      options:["Basique","Allowlist","Sandbox"]
-    },
-    monitoring:{
-      label:"Monitoring",
-      why:"Observe l’état, les erreurs et les traces.",
-      options:["Logs","Dashboard","Tracing"]
-    },
-    introspection:{
-      label:"Introspection",
-      why:"Permet au système de se relire et se corriger.",
-      options:["Aucune","Simple","Avancée"]
-    }
+    perception:{ label:"Perception & ingestion", why:"Capte les entrÃ©es brutes : texte, voix, image, document.", options:["Texte","Whisper","OCR","Multimodal"] },
+    interpretation:{ label:"ComprÃ©hension & structuration", why:"Transforme lâentrÃ©e brute en structure exploitable par le systÃ¨me.", options:["Parsing","Classification","Structuration avancÃ©e"] },
+    reasoning:{ label:"Raisonnement & dÃ©cision", why:"CÅur cognitif : analyse, gÃ©nÃ©ration, dÃ©cision.", options:["OpenAI","Ollama","Hybride"] },
+    planning:{ label:"Planification & dÃ©composition", why:"DÃ©coupe les objectifs en Ã©tapes exÃ©cutables.", options:["Basique","Planner","Agent"] },
+    memory:{ label:"MÃ©moire & connaissances", why:"Stocke contexte, historique, documents et reprÃ©sentations utiles.", options:["SQLite","Chroma","Qdrant"] },
+    tools:{ label:"BoÃ®te Ã  outils opÃ©rationnelle", why:"Regroupe OCR, web, API, calcul et autres outils utilitaires.", options:["Simple","OCR+Web","AvancÃ©"] },
+    orchestrator:{ label:"Orchestration des flux", why:"Coordonne la circulation entre les modules et dÃ©cide des chemins.", options:["Node-RED","n8n","LangGraph"] },
+    action:{ label:"ExÃ©cution & actions", why:"ExÃ©cute scripts, API et actions systÃ¨me.", options:["API","Python","SystÃ¨me"] },
+    security:{ label:"SÃ©curitÃ© & gouvernance", why:"Valide permissions, garde-fous et politiques dâexÃ©cution.", options:["Basique","Allowlist","Sandbox"] },
+    monitoring:{ label:"Observation & monitoring", why:"Observe lâÃ©tat, les erreurs et les traces dâexÃ©cution.", options:["Logs","Dashboard","Tracing"] },
+    introspection:{ label:"Introspection & amÃ©lioration", why:"Permet au systÃ¨me de se relire, se corriger et clarifier ses choix.", options:["Aucune","Simple","AvancÃ©e"] }
   },
-
+  moduleTree: {
+    id:"root", label:"Architecture DuffCore", type:"system", code:"SystÃ¨me global DuffCore : architecture de haut niveau.",
+    children:[
+      {
+        id:"tree_interfaces", label:"Canaux dâinteraction utilisateur", type:"module", code:"SÃ©lection multiple des interfaces utilisateur : Telegram, Web UI, CLI, API, etc.",
+        children:[
+          { id:"tree_if_in", label:"EntrÃ©es utilisateur", type:"submodule", code:"RÃ©ception messages, voix, images, documents." },
+          { id:"tree_if_out", label:"Sorties utilisateur", type:"submodule", code:"RÃ©ponses textuelles, confirmations, feedback visuel." },
+          { id:"tree_if_rt", label:"Gestion temps rÃ©el", type:"submodule", code:"Boucle de rÃ©ception/rÃ©ponse pour interfaces synchrones." }
+        ]
+      },
+      {
+        id:"tree_security", label:"SÃ©curitÃ© & gouvernance", type:"module", code:"Couche de validation et de contrÃ´le des permissions.",
+        children:[
+          {
+            id:"tree_security_validate", label:"Validation des actions", type:"submodule", code:"VÃ©rifie si une action est autorisÃ©e avant exÃ©cution.",
+            children:[
+              { id:"tree_allowlist_engine", label:"allowlist_engine.py", type:"file", code:"def validate_action(action):\n    return action in ALLOWLIST" },
+              { id:"tree_risk_rules", label:"risk_rules.json", type:"file", code:"{\n  \"delete_file\": \"high\",\n  \"send_email\": \"medium\"\n}" }
+            ]
+          },
+          {
+            id:"tree_security_policy", label:"Gestion des politiques", type:"submodule", code:"Centralise les rÃ¨gles de sÃ©curitÃ© selon le profil et le mode.",
+            children:[
+              { id:"tree_policy_manager", label:"policy_manager.py", type:"file", code:"class PolicyManager:\n    def get_rules(self, profile):\n        return []" }
+            ]
+          },
+          {
+            id:"tree_security_audit", label:"Audit & traÃ§abilitÃ©", type:"submodule", code:"Enregistre qui a fait quoi, quand et avec quel rÃ©sultat.",
+            children:[
+              { id:"tree_audit_logger", label:"audit_logger.py", type:"file", code:"def log_event(event):\n    print(event)" }
+            ]
+          }
+        ]
+      },
+      {
+        id:"tree_orch", label:"Orchestration des flux", type:"module", code:"Dirige les demandes entre perception, raisonnement, mÃ©moire et action.",
+        children:[
+          {
+            id:"tree_router", label:"Routage des demandes", type:"submodule", code:"DÃ©cide vers quel pipeline envoyer la demande.",
+            children:[
+              { id:"tree_router_file", label:"router.py", type:"file", code:"def route(payload):\n    return 'vision' if payload.get('image') else 'text'" }
+            ]
+          },
+          {
+            id:"tree_workflow", label:"Gestion des workflows", type:"submodule", code:"DÃ©finit les Ã©tapes dâun scÃ©nario ou dâune tÃ¢che.",
+            children:[
+              { id:"tree_workflow_file", label:"workflow.json", type:"file", code:"{\n  \"telegram_image\": [\"ingest\",\"ocr\",\"reason\",\"memory\",\"reply\"]\n}" }
+            ]
+          }
+        ]
+      },
+      {
+        id:"tree_memory", label:"MÃ©moire & connaissances", type:"module", code:"Stocke contexte, dÃ©cisions, documents et embeddings.",
+        children:[
+          {
+            id:"tree_memory_short", label:"MÃ©moire de session", type:"submodule", code:"Conserve le contexte immÃ©diat de la session.",
+            children:[
+              { id:"tree_session_state", label:"session_state.py", type:"file", code:"SESSION = {}\n\ndef save(key, value):\n    SESSION[key] = value" }
+            ]
+          },
+          {
+            id:"tree_memory_vector", label:"MÃ©moire vectorielle", type:"submodule", code:"Stocke reprÃ©sentations sÃ©mantiques des documents.",
+            children:[
+              { id:"tree_qdrant_adapter", label:"qdrant_adapter.py", type:"file", code:"def upsert_embedding(vector):\n    pass" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
   flows: {
     telegram_image: [
-      {
-        title:"1. Réception via Telegram",
-        text:"Une image arrive par Telegram. L’interface utilisateur agit ici comme canal d’entrée et de sortie."
-      },
-      {
-        title:"2. Routage vers l’orchestrateur",
-        text:"Le système décide quel pipeline lancer selon le type de contenu reçu."
-      },
-      {
-        title:"3. Passage par Perception",
-        text:"La Perception applique OCR ou vision pour extraire les éléments utiles."
-      },
-      {
-        title:"4. Interprétation",
-        text:"Le contenu brut est structuré pour devenir compréhensible par le moteur cognitif."
-      },
-      {
-        title:"5. Raisonnement",
-        text:"Le LLM analyse la demande et décide d’une réponse, d’une action ou d’un enrichissement."
-      },
-      {
-        title:"6. Mémoire",
-        text:"Le contexte ou le résultat pertinent est stocké pour pouvoir être réutilisé plus tard."
-      },
-      {
-        title:"7. Retour interface",
-        text:"Le résultat revient à Telegram comme réponse finale."
-      }
+      { title:"1. RÃ©ception via Telegram", text:"Une image arrive par Telegram. Le canal agit ici comme interface dâentrÃ©e et de sortie." },
+      { title:"2. Routage orchestration", text:"Le moteur dâorchestration choisit le pipeline image/document." },
+      { title:"3. Perception & ingestion", text:"OCR ou vision lit lâimage pour en extraire le contenu utile." },
+      { title:"4. ComprÃ©hension & structuration", text:"Le contenu brut est transformÃ© en structure exploitable." },
+      { title:"5. Raisonnement & dÃ©cision", text:"Le moteur cognitif dÃ©cide de la rÃ©ponse ou de lâaction." },
+      { title:"6. MÃ©moire & connaissances", text:"Le contexte utile est sauvegardÃ© pour rÃ©utilisation future." },
+      { title:"7. Retour Telegram", text:"La rÃ©ponse finale revient sur Telegram." }
     ],
     voice_command: [
-      {
-        title:"1. Entrée vocale",
-        text:"Un utilisateur parle via une interface compatible voix."
-      },
-      {
-        title:"2. Transcription",
-        text:"Whisper ou un outil équivalent transforme la voix en texte."
-      },
-      {
-        title:"3. Interprétation",
-        text:"L’intention de la commande est clarifiée."
-      },
-      {
-        title:"4. Raisonnement",
-        text:"Le moteur cognitif détermine ce qu’il faut faire."
-      },
-      {
-        title:"5. Planification",
-        text:"Le système découpe la demande en étapes si nécessaire."
-      },
-      {
-        title:"6. Action",
-        text:"La couche action exécute le script, l’appel API ou la commande."
-      },
-      {
-        title:"7. Sortie utilisateur",
-        text:"Le système renvoie une réponse ou confirmation."
-      }
+      { title:"1. EntrÃ©e vocale", text:"Un utilisateur parle via un canal compatible voix." },
+      { title:"2. Transcription", text:"Whisper ou outil Ã©quivalent transforme la voix en texte." },
+      { title:"3. ComprÃ©hension", text:"Lâintention est clarifiÃ©e et structurÃ©e." },
+      { title:"4. Raisonnement", text:"Le moteur cognitif dÃ©termine ce quâil faut faire." },
+      { title:"5. Planification", text:"Le systÃ¨me dÃ©coupe la demande en Ã©tapes si nÃ©cessaire." },
+      { title:"6. ExÃ©cution", text:"La couche action exÃ©cute le script, lâappel API ou la commande." },
+      { title:"7. Sortie utilisateur", text:"Le rÃ©sultat revient sur lâinterface choisie." }
     ],
     document_ingest: [
-      {
-        title:"1. Réception document",
-        text:"Un document entre via interface ou surveillance de dossier."
-      },
-      {
-        title:"2. Lecture du contenu",
-        text:"OCR ou lecture textuelle extrait le contenu exploitable."
-      },
-      {
-        title:"3. Structuration",
-        text:"Le système classe et organise les données du document."
-      },
-      {
-        title:"4. Raisonnement",
-        text:"Le LLM enrichit, résume ou catégorise les informations."
-      },
-      {
-        title:"5. Mémoire",
-        text:"Le document et son indexation sont injectés dans la mémoire choisie."
-      },
-      {
-        title:"6. Disponibilité future",
-        text:"Le contenu devient interrogeable par le reste du système."
-      }
+      { title:"1. RÃ©ception document", text:"Un document entre via interface ou dossier surveillÃ©." },
+      { title:"2. Lecture du contenu", text:"OCR ou lecture textuelle extrait les Ã©lÃ©ments utiles." },
+      { title:"3. Structuration", text:"Les donnÃ©es sont classÃ©es et organisÃ©es." },
+      { title:"4. Raisonnement", text:"Le moteur rÃ©sume, enrichit ou catÃ©gorise les informations." },
+      { title:"5. MÃ©moire", text:"Le document est injectÃ© dans la mÃ©moire sÃ©lectionnÃ©e." },
+      { title:"6. DisponibilitÃ©", text:"Le contenu devient interrogeable par le reste du systÃ¨me." }
     ]
   }
 };
 
 const ENGINE = {
-  state: {
-    mode: "guide",
-    profile: "simple",
-    interfaces: [],
-    modules: {},
-    flowName: "telegram_image",
-    flowIndex: 0
-  },
+  state: { mode:"guide", profile:"simple", interfaces:[], modules:{}, flowName:"telegram_image", flowIndex:0, selectedTreeNodeId:"root", treeOpen:{ root:true } },
 
   reset() {
-    this.state = {
-      mode: this.state.mode || "guide",
-      profile: this.state.profile || "simple",
-      interfaces: [],
-      modules: {},
-      flowName: "telegram_image",
-      flowIndex: 0
-    };
+    this.state = { mode:this.state.mode || "guide", profile:this.state.profile || "simple", interfaces:[], modules:{}, flowName:"telegram_image", flowIndex:0, selectedTreeNodeId:"root", treeOpen:{ root:true } };
   },
 
   applyScenario(name) {
     if (name === "simple") {
-      this.state.mode = "guide";
-      this.state.profile = "simple";
-      this.state.interfaces = ["telegram", "webui"];
-      this.state.modules = {
-        perception:"Texte",
-        interpretation:"Parsing",
-        reasoning:"OpenAI",
-        planning:"Basique",
-        memory:"SQLite",
-        tools:"Simple",
-        orchestrator:"Node-RED",
-        action:"Python",
-        security:"Basique",
-        monitoring:"Logs",
-        introspection:"Simple"
-      };
-      this.state.flowName = "telegram_image";
-      this.state.flowIndex = 0;
+      this.state.mode = "guide"; this.state.profile = "simple"; this.state.interfaces = ["telegram","webui"];
+      this.state.modules = { perception:"Texte", interpretation:"Parsing", reasoning:"OpenAI", planning:"Basique", memory:"SQLite", tools:"Simple", orchestrator:"Node-RED", action:"Python", security:"Basique", monitoring:"Logs", introspection:"Simple" };
+      this.state.flowName = "telegram_image"; this.state.flowIndex = 0;
     }
-
     if (name === "local") {
-      this.state.mode = "guide";
-      this.state.profile = "local";
-      this.state.interfaces = ["telegram", "cli"];
-      this.state.modules = {
-        perception:"Whisper",
-        interpretation:"Classification",
-        reasoning:"Ollama",
-        planning:"Planner",
-        memory:"Qdrant",
-        tools:"OCR+Web",
-        orchestrator:"Node-RED",
-        action:"Python",
-        security:"Allowlist",
-        monitoring:"Dashboard",
-        introspection:"Avancée"
-      };
-      this.state.flowName = "voice_command";
-      this.state.flowIndex = 0;
+      this.state.mode = "guide"; this.state.profile = "local"; this.state.interfaces = ["telegram","cli"];
+      this.state.modules = { perception:"Whisper", interpretation:"Classification", reasoning:"Ollama", planning:"Planner", memory:"Qdrant", tools:"OCR+Web", orchestrator:"Node-RED", action:"Python", security:"Allowlist", monitoring:"Dashboard", introspection:"AvancÃ©e" };
+      this.state.flowName = "voice_command"; this.state.flowIndex = 0;
     }
-
     if (name === "advanced") {
-      this.state.mode = "guide";
-      this.state.profile = "advanced";
-      this.state.interfaces = ["webui", "api", "telegram"];
-      this.state.modules = {
-        perception:"Multimodal",
-        interpretation:"Structuration avancée",
-        reasoning:"Hybride",
-        planning:"Agent",
-        memory:"Qdrant",
-        tools:"Avancé",
-        orchestrator:"LangGraph",
-        action:"Système",
-        security:"Sandbox",
-        monitoring:"Tracing",
-        introspection:"Avancée"
-      };
-      this.state.flowName = "document_ingest";
-      this.state.flowIndex = 0;
+      this.state.mode = "guide"; this.state.profile = "advanced"; this.state.interfaces = ["webui","api","telegram"];
+      this.state.modules = { perception:"Multimodal", interpretation:"Structuration avancÃ©e", reasoning:"Hybride", planning:"Agent", memory:"Qdrant", tools:"AvancÃ©", orchestrator:"LangGraph", action:"SystÃ¨me", security:"Sandbox", monitoring:"Tracing", introspection:"AvancÃ©e" };
+      this.state.flowName = "document_ingest"; this.state.flowIndex = 0;
     }
   },
 
   scoreModule(key, value) {
     let s = 6;
-
     if (key === "reasoning" && value === "OpenAI") s = 9;
     if (key === "reasoning" && value === "Ollama") s = 7;
     if (key === "reasoning" && value === "Hybride") s = 10;
-
     if (key === "memory" && value === "SQLite") s = 6;
     if (key === "memory" && value === "Chroma") s = 7;
     if (key === "memory" && value === "Qdrant") s = 9;
-
     if (key === "orchestrator" && value === "Node-RED") s = 8;
     if (key === "orchestrator" && value === "n8n") s = 7;
     if (key === "orchestrator" && value === "LangGraph") s = 10;
-
     if (key === "planning" && value === "Basique") s = 7;
     if (key === "planning" && value === "Planner") s = 8;
     if (key === "planning" && value === "Agent") s = 10;
-
     if (this.state.profile === "simple") {
       if (key === "orchestrator" && value === "Node-RED") s += 1;
       if (key === "reasoning" && value === "OpenAI") s += 1;
       if (key === "orchestrator" && value === "LangGraph") s -= 2;
       if (key === "planning" && value === "Agent") s -= 2;
     }
-
     if (this.state.profile === "local") {
       if (key === "reasoning" && value === "Ollama") s += 2;
       if (key === "reasoning" && value === "OpenAI") s -= 2;
       if (key === "memory" && value === "Qdrant") s += 1;
     }
-
     if (this.state.profile === "advanced") {
       if (key === "orchestrator" && value === "LangGraph") s += 2;
       if (key === "planning" && value === "Agent") s += 1;
       if (key === "reasoning" && value === "Hybride") s += 1;
-      if (key === "tools" && value === "Avancé") s += 1;
+      if (key === "tools" && value === "AvancÃ©") s += 1;
     }
-
     return Math.max(1, Math.min(10, s));
   },
 
   computeScore() {
-    let total = 0;
-    let count = 0;
-
+    let total = 0, count = 0;
     Object.keys(MODEL.modules).forEach(key => {
       const value = this.state.modules[key];
       if (!value) return;
       total += this.scoreModule(key, value);
       count += 1;
     });
-
     const score = count ? total / count : 0;
-    let status = "Incomplète";
+    let status = "IncomplÃ¨te";
     if (score >= 8.5) status = "Architecture solide";
     else if (score >= 7) status = "Architecture correcte";
     else if (score > 0) status = "Architecture fragile";
-
     return { score, status };
   },
 
   detectIssues() {
     const issues = [];
-
     const s = this.state.modules;
-
-    if (s.orchestrator === "LangGraph" && s.memory === "SQLite") {
-      issues.push({
-        msg:"LangGraph + SQLite est trop faible pour une architecture agentique avancée.",
-        fix:() => { this.state.modules.memory = "Qdrant"; }
-      });
-    }
-
-    if (s.reasoning === "Ollama" && this.state.profile === "simple") {
-      issues.push({
-        msg:"Ollama est moins adapté à un profil rapide & simple.",
-        fix:() => { this.state.profile = "local"; }
-      });
-    }
-
-    if (s.action === "Système" && s.security === "Basique") {
-      issues.push({
-        msg:"Action système avec sécurité basique = risque trop élevé.",
-        fix:() => { this.state.modules.security = "Allowlist"; }
-      });
-    }
-
-    if (s.perception === "Multimodal" && s.tools === "Simple") {
-      issues.push({
-        msg:"Une perception multimodale mérite des outils plus riches.",
-        fix:() => { this.state.modules.tools = "OCR+Web"; }
-      });
-    }
-
-    if (this.state.profile === "advanced" && s.planning === "Basique") {
-      issues.push({
-        msg:"Profil avancé avec planification basique : sous-dimensionné.",
-        fix:() => { this.state.modules.planning = "Agent"; }
-      });
-    }
-
-    if (this.state.interfaces.length === 0) {
-      issues.push({
-        msg:"Aucune interface utilisateur active. Le système n’a pas de canal d’entrée/sortie.",
-        fix:() => { this.state.interfaces = ["webui"]; }
-      });
-    }
-
+    if (s.orchestrator === "LangGraph" && s.memory === "SQLite") issues.push({ msg:"LangGraph + SQLite est trop faible pour une architecture agentique avancÃ©e.", fix:() => { this.state.modules.memory = "Qdrant"; } });
+    if (s.reasoning === "Ollama" && this.state.profile === "simple") issues.push({ msg:"Ollama est moins adaptÃ© Ã  un profil rapide & simple.", fix:() => { this.state.profile = "local"; } });
+    if (s.action === "SystÃ¨me" && s.security === "Basique") issues.push({ msg:"Action systÃ¨me avec sÃ©curitÃ© basique = risque trop Ã©levÃ©.", fix:() => { this.state.modules.security = "Allowlist"; } });
+    if (s.perception === "Multimodal" && s.tools === "Simple") issues.push({ msg:"Une perception multimodale mÃ©rite des outils plus riches.", fix:() => { this.state.modules.tools = "OCR+Web"; } });
+    if (this.state.profile === "advanced" && s.planning === "Basique") issues.push({ msg:"Profil avancÃ© avec planification basique : sous-dimensionnÃ©.", fix:() => { this.state.modules.planning = "Agent"; } });
+    if (this.state.interfaces.length === 0) issues.push({ msg:"Aucune interface utilisateur active. Le systÃ¨me nâa pas de canal dâentrÃ©e/sortie.", fix:() => { this.state.interfaces = ["webui"]; } });
     return issues;
   },
 
-  autoFix() {
-    this.detectIssues().forEach(i => i.fix());
-  },
+  autoFix() { this.detectIssues().forEach(i => i.fix()); },
 
   analysisText() {
     const scoreData = this.computeScore();
     const issues = this.detectIssues();
-
     let txt = "Architecture actuelle\n\n";
-
-    txt += "Interfaces utilisateur : " +
-      (this.state.interfaces.length ? this.state.interfaces.map(id => MODEL.interfaces.find(i => i.id === id)?.label).join(", ") : "aucune") +
-      "\n";
-
-    Object.keys(MODEL.modules).forEach(key => {
-      txt += MODEL.modules[key].label + " : " + (this.state.modules[key] || "non défini") + "\n";
-    });
-
+    txt += "Canaux utilisateur : " + (this.state.interfaces.length ? this.state.interfaces.map(id => MODEL.interfaces.find(i => i.id === id)?.label).join(", ") : "aucun") + "\n";
+    Object.keys(MODEL.modules).forEach(key => { txt += MODEL.modules[key].label + " : " + (this.state.modules[key] || "non dÃ©fini") + "\n"; });
     txt += "\nScore global : " + scoreData.score.toFixed(1) + "/10\n";
     txt += "Statut : " + scoreData.status + "\n";
-    txt += "Mode : " + (this.state.mode === "guide" ? "Guidé" : "Exploration") + "\n";
+    txt += "Mode : " + (this.state.mode === "guide" ? "GuidÃ©" : "Exploration") + "\n";
     txt += "Profil : " + this.state.profile + "\n";
-
     txt += "\nCommentaires intelligents\n";
-
-    if (this.state.modules.reasoning === "Hybride") {
-      txt += "- Le mode hybride augmente la souplesse, mais aussi la complexité.\n";
-    }
-    if (this.state.modules.memory === "Qdrant") {
-      txt += "- Qdrant est un bon choix pour une mémoire AGI plus sérieuse.\n";
-    }
-    if (this.state.interfaces.includes("webui")) {
-      txt += "- Web UI favorise un cockpit visuel plus riche.\n";
-    }
-    if (this.state.modules.introspection === "Avancée") {
-      txt += "- L’introspection avancée renforce l’identité réflexive DuffCore.\n";
-    }
-
-    if (issues.length) {
-      txt += "\nPoints de vigilance\n";
-      issues.forEach(i => { txt += "- " + i.msg + "\n"; });
-    } else {
-      txt += "\nAucune incohérence majeure détectée.\n";
-    }
-
-    if (this.state.mode === "guide") {
-      txt += "\nMode guidé : l’outil privilégie la cohérence.\n";
-    } else {
-      txt += "\nMode exploration : les combinaisons expérimentales sont acceptées.\n";
-    }
-
+    if (this.state.modules.reasoning === "Hybride") txt += "- Le mode hybride augmente la souplesse, mais ajoute de la complexitÃ©.\n";
+    if (this.state.modules.memory === "Qdrant") txt += "- Qdrant est un bon choix pour une mÃ©moire AGI plus sÃ©rieuse.\n";
+    if (this.state.interfaces.includes("webui")) txt += "- Web UI favorise un cockpit visuel plus riche.\n";
+    if (this.state.modules.introspection === "AvancÃ©e") txt += "- Lâintrospection avancÃ©e renforce lâidentitÃ© rÃ©flexive DuffCore.\n";
+    if (issues.length) { txt += "\nPoints de vigilance\n"; issues.forEach(i => { txt += "- " + i.msg + "\n"; }); }
+    else txt += "\nAucune incohÃ©rence majeure dÃ©tectÃ©e.\n";
+    txt += this.state.mode === "guide" ? "\nMode guidÃ© : lâoutil privilÃ©gie la cohÃ©rence.\n" : "\nMode exploration : les combinaisons expÃ©rimentales sont acceptÃ©es.\n";
     return txt;
   },
 
   planText() {
     const s = this.state.modules;
-    let txt = "Plan DuffCore détaillé\n\n";
-
-    txt += "1. Définir les interfaces utilisateur\n";
-    txt += "   - " + (this.state.interfaces.length ? this.state.interfaces.map(id => MODEL.interfaces.find(i => i.id === id)?.label).join(", ") : "à choisir") + "\n\n";
-
-    txt += "2. Couche entrée\n";
-    txt += "   - Perception : " + (s.perception || "à choisir") + "\n";
-    txt += "   - Interprétation : " + (s.interpretation || "à choisir") + "\n\n";
-
+    let txt = "Plan DuffCore dÃ©taillÃ©\n\n";
+    txt += "1. DÃ©finir les canaux dâinteraction utilisateur\n";
+    txt += "   - " + (this.state.interfaces.length ? this.state.interfaces.map(id => MODEL.interfaces.find(i => i.id === id)?.label).join(", ") : "Ã  choisir") + "\n\n";
+    txt += "2. Couche entrÃ©e et acquisition\n";
+    txt += "   - Perception & ingestion : " + (s.perception || "Ã  choisir") + "\n";
+    txt += "   - ComprÃ©hension & structuration : " + (s.interpretation || "Ã  choisir") + "\n\n";
     txt += "3. Couche cognition\n";
-    txt += "   - Raisonnement : " + (s.reasoning || "à choisir") + "\n";
-    txt += "   - Planification : " + (s.planning || "à choisir") + "\n\n";
-
-    txt += "4. Mémoire et outils\n";
-    txt += "   - Mémoire : " + (s.memory || "à choisir") + "\n";
-    txt += "   - Outils : " + (s.tools || "à choisir") + "\n\n";
-
-    txt += "5. Exécution\n";
-    txt += "   - Orchestrateur : " + (s.orchestrator || "à choisir") + "\n";
-    txt += "   - Action : " + (s.action || "à choisir") + "\n\n";
-
-    txt += "6. Contrôle\n";
-    txt += "   - Sécurité : " + (s.security || "à choisir") + "\n";
-    txt += "   - Monitoring : " + (s.monitoring || "à choisir") + "\n";
-    txt += "   - Introspection : " + (s.introspection || "à choisir") + "\n\n";
-
-    if (this.state.profile === "simple") {
-      txt += "7. Priorité : aller vite avec peu de friction.\n";
-    }
-    if (this.state.profile === "local") {
-      txt += "7. Priorité : autonomie locale, modèles et stockage sur machine.\n";
-    }
-    if (this.state.profile === "advanced") {
-      txt += "7. Priorité : évolutivité, orchestration forte et traçabilité.\n";
-    }
-
-    if (this.detectIssues().length) {
-      txt += "\n8. Corriger les incohérences avant implémentation réelle.\n";
-    }
-
+    txt += "   - Raisonnement & dÃ©cision : " + (s.reasoning || "Ã  choisir") + "\n";
+    txt += "   - Planification & dÃ©composition : " + (s.planning || "Ã  choisir") + "\n\n";
+    txt += "4. Connaissances, mÃ©moire et outils\n";
+    txt += "   - MÃ©moire & connaissances : " + (s.memory || "Ã  choisir") + "\n";
+    txt += "   - BoÃ®te Ã  outils opÃ©rationnelle : " + (s.tools || "Ã  choisir") + "\n\n";
+    txt += "5. Orchestration et exÃ©cution\n";
+    txt += "   - Orchestration des flux : " + (s.orchestrator || "Ã  choisir") + "\n";
+    txt += "   - ExÃ©cution & actions : " + (s.action || "Ã  choisir") + "\n\n";
+    txt += "6. ContrÃ´le\n";
+    txt += "   - SÃ©curitÃ© & gouvernance : " + (s.security || "Ã  choisir") + "\n";
+    txt += "   - Observation & monitoring : " + (s.monitoring || "Ã  choisir") + "\n";
+    txt += "   - Introspection & amÃ©lioration : " + (s.introspection || "Ã  choisir") + "\n\n";
+    if (this.state.profile === "simple") txt += "7. PrioritÃ© : aller vite avec peu de friction.\n";
+    if (this.state.profile === "local") txt += "7. PrioritÃ© : autonomie locale et contrÃ´le maximal.\n";
+    if (this.state.profile === "advanced") txt += "7. PrioritÃ© : Ã©volutivitÃ©, modularitÃ© et traÃ§abilitÃ©.\n";
+    if (this.detectIssues().length) txt += "\n8. Corriger les incohÃ©rences avant implÃ©mentation rÃ©elle.\n";
     return txt;
   },
+
+  findTreeNodeById(node, id) {
+    if (node.id === id) return node;
+    if (!node.children) return null;
+    for (const child of node.children) {
+      const found = this.findTreeNodeById(child, id);
+      if (found) return found;
+    }
+    return null;
+  },
+
+  toggleTree(id) { this.state.treeOpen[id] = !this.state.treeOpen[id]; },
+  selectTreeNode(id) { this.state.selectedTreeNodeId = id; },
+  currentTreeNode() { return this.findTreeNodeById(MODEL.moduleTree, this.state.selectedTreeNodeId); },
 
   flowStep() {
     const steps = MODEL.flows[this.state.flowName];
@@ -788,76 +496,32 @@ const ENGINE = {
     if (this.state.flowIndex > 0) this.state.flowIndex -= 1;
   },
 
-  resetFlow() {
-    this.state.flowIndex = 0;
-  },
-
-  setFlow(name) {
-    this.state.flowName = name;
-    this.state.flowIndex = 0;
-  }
+  resetFlow() { this.state.flowIndex = 0; },
+  setFlow(name) { this.state.flowName = name; this.state.flowIndex = 0; }
 };
 
 const UI = {
-  setMode(v) {
-    ENGINE.state.mode = v;
-    this.render();
-  },
-
-  setProfile(v) {
-    ENGINE.state.profile = v;
-    this.render();
-  },
-
-  reset() {
-    ENGINE.reset();
-    this.render();
-  },
-
-  applyScenario(name) {
-    ENGINE.applyScenario(name);
-    this.render();
-  },
+  setMode(v) { ENGINE.state.mode = v; this.render(); },
+  setProfile(v) { ENGINE.state.profile = v; this.render(); },
+  reset() { ENGINE.reset(); this.render(); },
+  applyScenario(name) { ENGINE.applyScenario(name); this.render(); },
 
   toggleInterface(id, checked) {
     const list = ENGINE.state.interfaces;
     const exists = list.includes(id);
-
     if (checked && !exists) list.push(id);
     if (!checked && exists) ENGINE.state.interfaces = list.filter(x => x !== id);
-
     this.render();
   },
 
-  setModule(key, value) {
-    ENGINE.state.modules[key] = value;
-    this.render();
-  },
-
-  autoFix() {
-    ENGINE.autoFix();
-    this.render();
-  },
-
-  changeFlow(name) {
-    ENGINE.setFlow(name);
-    this.renderFlow();
-  },
-
-  nextFlow() {
-    ENGINE.nextFlow();
-    this.renderFlow();
-  },
-
-  prevFlow() {
-    ENGINE.prevFlow();
-    this.renderFlow();
-  },
-
-  resetFlow() {
-    ENGINE.resetFlow();
-    this.renderFlow();
-  },
+  setModule(key, value) { ENGINE.state.modules[key] = value; this.render(); },
+  autoFix() { ENGINE.autoFix(); this.render(); },
+  changeFlow(name) { ENGINE.setFlow(name); this.renderFlow(); },
+  nextFlow() { ENGINE.nextFlow(); this.renderFlow(); },
+  prevFlow() { ENGINE.prevFlow(); this.renderFlow(); },
+  resetFlow() { ENGINE.resetFlow(); this.renderFlow(); },
+  toggleTree(id) { ENGINE.toggleTree(id); this.renderTree(); },
+  selectTreeNode(id) { ENGINE.selectTreeNode(id); this.renderTree(); this.renderCodeView(); },
 
   renderVersion() {
     document.getElementById("versionLine").textContent = "Version : " + MODEL.version;
@@ -866,39 +530,32 @@ const UI = {
   renderModeProfile() {
     document.getElementById("modeSelect").value = ENGINE.state.mode;
     document.getElementById("profileSelect").value = ENGINE.state.profile;
-
-    document.getElementById("modeDesc").textContent =
-      ENGINE.state.mode === "guide"
-        ? "Le système te guide, détecte les incohérences et propose des corrections."
-        : "Tu explores librement sans contrainte forte.";
-
+    document.getElementById("modeDesc").textContent = ENGINE.state.mode === "guide"
+      ? "Le systÃ¨me te guide, dÃ©tecte les incohÃ©rences et propose des corrections."
+      : "Tu explores librement sans contrainte forte.";
     let txt = "";
     if (ENGINE.state.profile === "simple") txt = "Objectif : aller vite avec peu de friction.";
-    if (ENGINE.state.profile === "local") txt = "Objectif : autonomie locale et contrôle maximal.";
-    if (ENGINE.state.profile === "advanced") txt = "Objectif : puissance, modularité et évolutivité.";
+    if (ENGINE.state.profile === "local") txt = "Objectif : autonomie locale et contrÃ´le maximal.";
+    if (ENGINE.state.profile === "advanced") txt = "Objectif : puissance, modularitÃ© et Ã©volutivitÃ©.";
     document.getElementById("profileDesc").textContent = txt;
   },
 
   renderInterfaces() {
     let html = "";
-
     MODEL.interfaces.forEach(iface => {
       const active = ENGINE.state.interfaces.includes(iface.id);
-
       html += `
         <div class="iface-card">
           <div class="iface-head">
             <div class="iface-name">${iface.label}</div>
-            <div>
-              <input type="checkbox" ${active ? "checked" : ""} onchange="UI.toggleInterface('${iface.id}', this.checked)">
-            </div>
+            <div><input type="checkbox" ${active ? "checked" : ""} onchange="UI.toggleInterface('${iface.id}', this.checked)"></div>
           </div>
           <div class="iface-cap">
-            ${iface.input ? '<span class="cap">entrée</span>' : ''}
+            ${iface.input ? '<span class="cap">entrÃ©e</span>' : ''}
             ${iface.output ? '<span class="cap">sortie</span>' : ''}
-            ${iface.realtime ? '<span class="cap">temps réel</span>' : ''}
+            ${iface.realtime ? '<span class="cap">temps rÃ©el</span>' : ''}
             ${iface.visual ? '<span class="cap">visuel</span>' : ''}
-            ${iface.machine ? '<span class="cap">machine↔machine</span>' : ''}
+            ${iface.machine ? '<span class="cap">machineâmachine</span>' : ''}
             ${iface.devMode ? '<span class="cap">dev</span>' : ''}
             ${iface.async ? '<span class="cap">asynchrone</span>' : ''}
             <span class="cap">${iface.type}</span>
@@ -906,20 +563,16 @@ const UI = {
         </div>
       `;
     });
-
     document.getElementById("interfacesUI").innerHTML = html;
   },
 
   renderLayers() {
     let html = "";
-
     MODEL.layers.forEach(layer => {
       html += `<div class="layer-title">${layer.name}</div>`;
-
       layer.modules.forEach(key => {
         const mod = MODEL.modules[key];
         const value = ENGINE.state.modules[key] || "";
-
         html += `
           <details>
             <summary>${mod.label} (${value || "choisir"})</summary>
@@ -932,18 +585,15 @@ const UI = {
         `;
       });
     });
-
     document.getElementById("layersUI").innerHTML = html;
   },
 
   renderKpisAndTexts() {
     const scoreData = ENGINE.computeScore();
     const issues = ENGINE.detectIssues();
-
-    document.getElementById("scoreBox").textContent = scoreData.score ? scoreData.score.toFixed(1) + "/10" : "—";
+    document.getElementById("scoreBox").textContent = scoreData.score ? scoreData.score.toFixed(1) + "/10" : "â";
     document.getElementById("statusBox").textContent = scoreData.status;
     document.getElementById("issuesBox").textContent = String(issues.length);
-
     document.getElementById("analysis").textContent = ENGINE.analysisText();
     document.getElementById("plan").textContent = ENGINE.planText();
   },
@@ -952,34 +602,54 @@ const UI = {
     const s = ENGINE.state.modules;
     const interfacesText = ENGINE.state.interfaces.length
       ? ENGINE.state.interfaces.map(id => MODEL.interfaces.find(i => i.id === id)?.label).join(", ")
-      : "—";
-
+      : "â";
     document.getElementById("graph-interfaces").textContent = interfacesText;
-    document.getElementById("graph-perception").textContent = s.perception || "—";
-    document.getElementById("graph-interpretation").textContent = s.interpretation || "—";
-    document.getElementById("graph-reasoning").textContent = s.reasoning || "—";
-    document.getElementById("graph-memory").textContent = s.memory || "—";
-    document.getElementById("graph-orchestrator").textContent = s.orchestrator || "—";
-    document.getElementById("graph-action").textContent = s.action || "—";
-
-    document.getElementById("tag-planning").textContent = "Planification : " + (s.planning || "—");
-    document.getElementById("tag-tools").textContent = "Outils : " + (s.tools || "—");
-    document.getElementById("tag-security").textContent = "Sécurité : " + (s.security || "—");
-    document.getElementById("tag-monitoring").textContent = "Monitoring : " + (s.monitoring || "—");
-    document.getElementById("tag-introspection").textContent = "Introspection : " + (s.introspection || "—");
+    document.getElementById("graph-perception").textContent = s.perception || "â";
+    document.getElementById("graph-interpretation").textContent = s.interpretation || "â";
+    document.getElementById("graph-reasoning").textContent = s.reasoning || "â";
+    document.getElementById("graph-memory").textContent = s.memory || "â";
+    document.getElementById("graph-orchestrator").textContent = s.orchestrator || "â";
+    document.getElementById("graph-action").textContent = s.action || "â";
+    document.getElementById("tag-planning").textContent = "Planification : " + (s.planning || "â");
+    document.getElementById("tag-tools").textContent = "Outils : " + (s.tools || "â");
+    document.getElementById("tag-security").textContent = "SÃ©curitÃ© : " + (s.security || "â");
+    document.getElementById("tag-monitoring").textContent = "Monitoring : " + (s.monitoring || "â");
+    document.getElementById("tag-introspection").textContent = "Introspection : " + (s.introspection || "â");
   },
 
   renderFlow() {
     document.getElementById("flowScenarioSelect").value = ENGINE.state.flowName;
-
     const steps = MODEL.flows[ENGINE.state.flowName];
     const step = ENGINE.flowStep();
+    document.getElementById("flowCounter").textContent = "Ãtape " + (ENGINE.state.flowIndex + 1) + " sur " + steps.length;
+    document.getElementById("flowBox").innerHTML = "<strong>" + step.title + "</strong><div class='small' style='margin-top:8px'>" + step.text + "</div>";
+  },
 
-    document.getElementById("flowCounter").textContent =
-      "Étape " + (ENGINE.state.flowIndex + 1) + " sur " + steps.length;
+  renderTreeNode(node) {
+    const isOpen = !!ENGINE.state.treeOpen[node.id];
+    const isSelected = ENGINE.state.selectedTreeNodeId === node.id;
+    let html = `
+      <div class="tree-node">
+        <div class="tree-title" onclick="UI.selectTreeNode('${node.id}')">${isSelected ? "â¶ " : ""}${node.label}</div>
+        <div class="tree-meta">Type : ${node.type}</div>
+        <button class="tree-btn" onclick="UI.toggleTree('${node.id}')">${isOpen ? "Replier" : "DÃ©plier"}</button>
+    `;
+    if (isOpen && node.children && node.children.length) {
+      html += `<div class="tree-children">`;
+      node.children.forEach(child => { html += this.renderTreeNode(child); });
+      html += `</div>`;
+    }
+    html += `</div>`;
+    return html;
+  },
 
-    document.getElementById("flowBox").innerHTML =
-      "<strong>" + step.title + "</strong><div class='small' style='margin-top:8px'>" + step.text + "</div>";
+  renderTree() {
+    document.getElementById("treeUI").innerHTML = this.renderTreeNode(MODEL.moduleTree);
+  },
+
+  renderCodeView() {
+    const node = ENGINE.currentTreeNode();
+    document.getElementById("codeView").textContent = node ? node.code : "Aucun nÅud sÃ©lectionnÃ©.";
   },
 
   render() {
@@ -990,6 +660,8 @@ const UI = {
     this.renderKpisAndTexts();
     this.renderGraph();
     this.renderFlow();
+    this.renderTree();
+    this.renderCodeView();
   }
 };
 
