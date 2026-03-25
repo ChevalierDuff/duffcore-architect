@@ -3,198 +3,698 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DuffCore Architect V9</title>
-
+<title>DuffCore Architect V11</title>
 <style>
-body { background:#0b1220; color:white; font-family:Arial; padding:10px; }
-
-details {
-  background:#18233b;
+:root{
+  --bg:#0b1220;
+  --panel:#121c30;
+  --panel2:#17243d;
+  --border:#2b426b;
+  --text:#eef4ff;
+  --muted:#a9b6d1;
+  --good:#56d3b0;
+  --warn:#ffcc66;
+  --bad:#ff7d7d;
+  --accent:#4f8cff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:12px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+h1,h2,h3{margin:0 0 10px 0}
+.section{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
+}
+details{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:8px;
   margin-bottom:8px;
-  padding:8px;
-  border-radius:8px;
 }
-
-select {
+summary{cursor:pointer;font-weight:bold}
+select, button{
   width:100%;
-  padding:8px;
-  margin-top:5px;
-}
-
-.layer {
-  margin-bottom:15px;
-}
-
-.plan {
-  background:#111a30;
+  margin-top:8px;
   padding:10px;
   border-radius:10px;
-  position:sticky;
-  bottom:0;
+  border:1px solid var(--border);
+  background:#0f182b;
+  color:var(--text);
 }
-
-h2 { font-size:16px; margin:10px 0; }
+button{cursor:pointer;background:#1d335b}
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+@media (max-width:950px){
+  .row{grid-template-columns:1fr;}
+}
+.small{font-size:13px;color:var(--muted)}
+.good{color:var(--good)}
+.warn{color:var(--warn)}
+.bad{color:var(--bad)}
+pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+  background:#0d1628;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  overflow:auto;
+}
+.kpis{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+@media (max-width:800px){
+  .kpis{grid-template-columns:1fr;}
+}
+.kpi{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+}
+.pill{
+  display:inline-block;
+  padding:4px 8px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  font-size:12px;
+  margin:4px 6px 0 0;
+  color:var(--muted);
+}
+.flowbox{
+  background:#0d1628;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+}
+.flow-step{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  margin-top:8px;
+}
+.flow-nav{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+.version{
+  margin-top:6px;
+  font-size:13px;
+  color:var(--muted);
+}
+.notice{
+  background:#151f34;
+  border-left:4px solid var(--warn);
+  padding:10px;
+  border-radius:8px;
+  margin-top:8px;
+}
 </style>
 </head>
-
 <body>
 
-<h2>DuffCore Architect V9</h2>
+<div class="section">
+  <h1>DuffCore Architect</h1>
+  <div class="version" id="versionLine"></div>
+  <div class="small">V11 : recommandations intelligentes + simulation de flux par scénario.</div>
+</div>
 
-<div id="app"></div>
+<div class="section">
+  <h2>Mode et profil</h2>
+  <select id="modeSelect" onchange="setMode(this.value)">
+    <option value="guide">Guidé</option>
+    <option value="explore">Exploration</option>
+  </select>
+  <div id="modeDesc" class="small"></div>
 
-<div class="plan">
-<pre id="analysis"></pre>
+  <select id="profileSelect" onchange="setProfile(this.value)">
+    <option value="simple">Rapide & simple</option>
+    <option value="local">Autonome (local)</option>
+    <option value="advanced">Puissant & évolutif</option>
+  </select>
+  <div id="profileDesc" class="small"></div>
+
+  <button onclick="applyScenario('simple')">Scénario cloud simple</button>
+  <button onclick="applyScenario('local')">Scénario local autonome</button>
+  <button onclick="applyScenario('advanced')">Scénario agentique avancée</button>
+  <button onclick="resetState()">Réinitialiser</button>
+
+  <div class="kpis">
+    <div class="kpi"><strong>Score global</strong><div id="scoreBox" class="small"></div></div>
+    <div class="kpi"><strong>Statut</strong><div id="statusBox" class="small"></div></div>
+    <div class="kpi"><strong>Incohérences</strong><div id="issuesBox" class="small"></div></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="section">
+    <h2>Architecture</h2>
+    <div id="modulesUI"></div>
+  </div>
+
+  <div>
+    <div class="section">
+      <h2>Analyse intelligente</h2>
+      <button onclick="autoFix()">Corriger automatiquement</button>
+      <pre id="analysis"></pre>
+    </div>
+
+    <div class="section">
+      <h2>Plan DuffCore</h2>
+      <pre id="plan"></pre>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Simulation de flux</h2>
+  <select id="scenarioSelect" onchange="changeFlowScenario(this.value)">
+    <option value="telegram_image">Telegram → image → analyse → mémoire → réponse</option>
+    <option value="voice_command">Voix → transcription → raisonnement → action</option>
+    <option value="document_ingest">Document → OCR → structuration → mémoire</option>
+  </select>
+
+  <div class="flowbox">
+    <div><strong>Étape actuelle</strong></div>
+    <div id="flowStepCounter" class="small"></div>
+    <div id="flowStepBox" class="flow-step"></div>
+
+    <div class="flow-nav">
+      <button onclick="prevFlowStep()">Retour</button>
+      <button onclick="nextFlowStep()">Suivant</button>
+      <button onclick="resetFlow()">Reset</button>
+    </div>
+  </div>
 </div>
 
 <script>
+const APP_VERSION = "11.0.0";
 
-const layers = [
-{
-name:"Entrée",
-modules:[
-{
-id:"communication",
-name:"Communication",
-options:["Telegram","Web UI","CLI"]
-},
-{
-id:"perception",
-name:"Perception",
-options:["Texte","Whisper (voix)","OCR (image)","Multimodal"]
-}
-]
-},
+const modules = {
+  communication:["Telegram","Web UI","CLI"],
+  perception:["Texte","Whisper","OCR","Multimodal"],
+  interpretation:["Parsing","Classification","Structuration avancée"],
+  reasoning:["OpenAI","Ollama","Hybride"],
+  planning:["Basique","Planner","Agent"],
+  memory:["SQLite","Chroma","Qdrant"],
+  tools:["Simple","OCR+Web","Avancé"],
+  orchestrator:["Node-RED","n8n","LangGraph"],
+  action:["API","Python","Système"],
+  security:["Basique","Allowlist","Sandbox"],
+  monitoring:["Logs","Dashboard","Tracing"],
+  introspection:["Aucune","Simple","Avancée"]
+};
 
-{
-name:"Intelligence",
-modules:[
-{
-id:"interpretation",
-name:"Interprétation",
-options:["Parsing simple","Structuration avancée"]
-},
-{
-id:"llm",
-name:"LLM",
-options:["OpenAI","Ollama","Hybride"]
-},
-{
-id:"planning",
-name:"Planification",
-options:["Direct LLM","LangChain","LangGraph"]
-}
-]
-},
+const moduleLabels = {
+  communication:"Communication",
+  perception:"Perception",
+  interpretation:"Interprétation",
+  reasoning:"Raisonnement",
+  planning:"Planification",
+  memory:"Mémoire",
+  tools:"Outils",
+  orchestrator:"Orchestrateur",
+  action:"Action",
+  security:"Sécurité",
+  monitoring:"Monitoring",
+  introspection:"Introspection"
+};
 
-{
-name:"Mémoire & outils",
-modules:[
-{
-id:"memory",
-name:"Mémoire",
-options:["SQLite","Chroma","Qdrant"]
-},
-{
-id:"tools",
-name:"Outils",
-options:["OCR","Browser","API tools","Custom scripts"]
-}
-]
-},
+const flows = {
+  telegram_image: [
+    {
+      title:"1. Entrée Telegram",
+      text:"L’utilisateur envoie une image dans Telegram. Le module Communication reçoit la demande et la transmet au système."
+    },
+    {
+      title:"2. Routage initial",
+      text:"L’Orchestrateur décide que le flux doit passer par la Perception visuelle pour lire l’image."
+    },
+    {
+      title:"3. Analyse de l’image",
+      text:"Le module Perception utilise OCR ou vision pour extraire le texte ou les éléments utiles."
+    },
+    {
+      title:"4. Interprétation",
+      text:"Le module Interprétation transforme le contenu brut en structure compréhensible."
+    },
+    {
+      title:"5. Raisonnement",
+      text:"Le module Raisonnement analyse la demande, produit une réponse ou décide d’une action."
+    },
+    {
+      title:"6. Mémoire",
+      text:"Si utile, le résultat ou le contexte est stocké dans la Mémoire pour référence future."
+    },
+    {
+      title:"7. Réponse",
+      text:"Le système renvoie la réponse finale vers Telegram via le module Communication."
+    }
+  ],
+  voice_command: [
+    {
+      title:"1. Entrée vocale",
+      text:"L’utilisateur parle. Communication + Perception vocale reçoivent le signal."
+    },
+    {
+      title:"2. Transcription",
+      text:"Whisper ou équivalent transforme la voix en texte."
+    },
+    {
+      title:"3. Interprétation",
+      text:"Le texte est structuré et l’intention est clarifiée."
+    },
+    {
+      title:"4. Raisonnement",
+      text:"Le LLM décide de ce qu’il faut faire à partir de la commande."
+    },
+    {
+      title:"5. Planification",
+      text:"Le système découpe l’action en étapes si nécessaire."
+    },
+    {
+      title:"6. Action",
+      text:"La couche Action exécute le script, l’appel API ou la commande système."
+    },
+    {
+      title:"7. Retour utilisateur",
+      text:"Le résultat est renvoyé à l’utilisateur."
+    }
+  ],
+  document_ingest: [
+    {
+      title:"1. Réception document",
+      text:"Un fichier entre dans le système via Communication ou un dossier surveillé."
+    },
+    {
+      title:"2. OCR / lecture",
+      text:"Perception lit le document, extrait le texte et les éléments utiles."
+    },
+    {
+      title:"3. Structuration",
+      text:"Interprétation classe, nettoie et structure le contenu."
+    },
+    {
+      title:"4. Raisonnement",
+      text:"Le LLM résume, catégorise ou enrichit les données du document."
+    },
+    {
+      title:"5. Mémoire",
+      text:"Le contenu est injecté dans la mémoire choisie : SQLite, Chroma ou Qdrant."
+    },
+    {
+      title:"6. Disponibilité",
+      text:"Le document devient exploitable par les autres modules et scénarios futurs."
+    }
+  ]
+};
 
-{
-name:"Exécution",
-modules:[
-{
-id:"orchestrator",
-name:"Orchestrateur",
-options:["Node-RED","LangGraph","n8n"]
-},
-{
-id:"action",
-name:"Action",
-options:["Python","Node","API"]
-}
-]
-},
+let state = {
+  mode:"guide",
+  profile:"simple"
+};
 
-{
-name:"Contrôle",
-modules:[
-{
-id:"security",
-name:"Sécurité",
-options:["Basique","Sandbox","Validation avancée"]
-},
-{
-id:"monitoring",
-name:"Monitoring",
-options:["Logs","LangSmith","Grafana"]
-},
-{
-id:"introspection",
-name:"Introspection",
-options:["Aucune","Simple","Avancée"]
-}
-]
-}
-];
+let currentFlow = "telegram_image";
+let flowIndex = 0;
+let issues = [];
+let score = 0;
+let statusText = "—";
 
-let state = {};
+function setMode(v){
+  state.mode = v;
+  render();
+}
+
+function setProfile(v){
+  state.profile = v;
+  render();
+}
+
+function resetState(){
+  state = {
+    mode: state.mode || "guide",
+    profile: state.profile || "simple"
+  };
+  render();
+}
+
+function applyScenario(type){
+  if(type === "simple"){
+    state = {
+      mode:"guide",
+      profile:"simple",
+      communication:"Telegram",
+      perception:"Texte",
+      interpretation:"Parsing",
+      reasoning:"OpenAI",
+      planning:"Basique",
+      memory:"SQLite",
+      tools:"Simple",
+      orchestrator:"Node-RED",
+      action:"Python",
+      security:"Basique",
+      monitoring:"Logs",
+      introspection:"Simple"
+    };
+  }
+
+  if(type === "local"){
+    state = {
+      mode:"guide",
+      profile:"local",
+      communication:"Telegram",
+      perception:"Whisper",
+      interpretation:"Classification",
+      reasoning:"Ollama",
+      planning:"Planner",
+      memory:"Qdrant",
+      tools:"OCR+Web",
+      orchestrator:"Node-RED",
+      action:"Python",
+      security:"Allowlist",
+      monitoring:"Dashboard",
+      introspection:"Avancée"
+    };
+  }
+
+  if(type === "advanced"){
+    state = {
+      mode:"guide",
+      profile:"advanced",
+      communication:"Web UI",
+      perception:"Multimodal",
+      interpretation:"Structuration avancée",
+      reasoning:"Hybride",
+      planning:"Agent",
+      memory:"Qdrant",
+      tools:"Avancé",
+      orchestrator:"LangGraph",
+      action:"Système",
+      security:"Sandbox",
+      monitoring:"Tracing",
+      introspection:"Avancée"
+    };
+  }
+
+  render();
+}
+
+function selectOption(key, value){
+  state[key] = value;
+  render();
+}
+
+function renderModules(){
+  let html = "";
+  Object.keys(modules).forEach(key => {
+    const value = state[key] || "";
+    html += `
+      <details>
+        <summary>${moduleLabels[key]} (${value || "choisir"})</summary>
+        <select onchange="selectOption('${key}', this.value)">
+          <option value=""></option>
+          ${modules[key].map(opt => `<option ${value===opt ? "selected" : ""}>${opt}</option>`).join("")}
+        </select>
+      </details>
+    `;
+  });
+  document.getElementById("modulesUI").innerHTML = html;
+}
+
+function computeScore(){
+  let total = 0;
+  let count = 0;
+
+  Object.keys(modules).forEach(key => {
+    const value = state[key];
+    if(!value) return;
+
+    let s = 6;
+
+    if(key === "reasoning" && value === "OpenAI") s = 9;
+    if(key === "reasoning" && value === "Ollama") s = 7;
+    if(key === "reasoning" && value === "Hybride") s = 10;
+
+    if(key === "memory" && value === "SQLite") s = 6;
+    if(key === "memory" && value === "Chroma") s = 7;
+    if(key === "memory" && value === "Qdrant") s = 9;
+
+    if(key === "orchestrator" && value === "Node-RED") s = 8;
+    if(key === "orchestrator" && value === "n8n") s = 7;
+    if(key === "orchestrator" && value === "LangGraph") s = 10;
+
+    if(key === "planning" && value === "Basique") s = 7;
+    if(key === "planning" && value === "Planner") s = 8;
+    if(key === "planning" && value === "Agent") s = 10;
+
+    if(state.profile === "simple" && key === "orchestrator" && value === "Node-RED") s += 1;
+    if(state.profile === "simple" && key === "reasoning" && value === "OpenAI") s += 1;
+    if(state.profile === "simple" && key === "orchestrator" && value === "LangGraph") s -= 2;
+
+    if(state.profile === "local" && key === "reasoning" && value === "Ollama") s += 2;
+    if(state.profile === "local" && key === "reasoning" && value === "OpenAI") s -= 2;
+
+    if(state.profile === "advanced" && key === "orchestrator" && value === "LangGraph") s += 2;
+    if(state.profile === "advanced" && key === "planning" && value === "Agent") s += 1;
+
+    s = Math.max(1, Math.min(10, s));
+
+    total += s;
+    count += 1;
+  });
+
+  score = count ? total / count : 0;
+
+  if(score >= 8.5) statusText = "Architecture solide";
+  else if(score >= 7) statusText = "Architecture correcte";
+  else if(score > 0) statusText = "Architecture fragile";
+  else statusText = "Incomplète";
+}
+
+function detectIssues(){
+  const out = [];
+
+  if(state.orchestrator === "LangGraph" && state.memory === "SQLite"){
+    out.push({
+      msg:"LangGraph + SQLite est trop faible pour une architecture agentique avancée.",
+      fix:() => { state.memory = "Qdrant"; }
+    });
+  }
+
+  if(state.reasoning === "Ollama" && state.profile === "simple"){
+    out.push({
+      msg:"Ollama est moins adapté à un profil rapide & simple.",
+      fix:() => { state.profile = "local"; }
+    });
+  }
+
+  if(state.action === "Système" && state.security === "Basique"){
+    out.push({
+      msg:"Action système avec sécurité basique = risque trop élevé.",
+      fix:() => { state.security = "Allowlist"; }
+    });
+  }
+
+  if(state.perception === "Multimodal" && state.tools === "Simple"){
+    out.push({
+      msg:"Une perception multimodale mérite des outils plus riches.",
+      fix:() => { state.tools = "OCR+Web"; }
+    });
+  }
+
+  if(state.profile === "advanced" && state.planning === "Basique"){
+    out.push({
+      msg:"Profil avancé avec planification basique : sous-dimensionné.",
+      fix:() => { state.planning = "Agent"; }
+    });
+  }
+
+  issues = out;
+}
+
+function autoFix(){
+  issues.forEach(i => i.fix());
+  render();
+}
+
+function renderAnalysis(){
+  computeScore();
+  detectIssues();
+
+  let txt = "Architecture actuelle\n\n";
+
+  Object.keys(modules).forEach(key => {
+    txt += moduleLabels[key] + " : " + (state[key] || "non défini") + "\n";
+  });
+
+  txt += "\nScore global : " + score.toFixed(1) + "/10\n";
+  txt += "Statut : " + statusText + "\n";
+  txt += "Mode : " + (state.mode === "guide" ? "Guidé" : "Exploration") + "\n";
+  txt += "Profil : " + state.profile + "\n";
+
+  txt += "\nCommentaires intelligents\n";
+
+  if(state.reasoning === "Hybride"){
+    txt += "- Le mode hybride augmente la souplesse, mais aussi la complexité.\n";
+  }
+  if(state.memory === "Qdrant"){
+    txt += "- Qdrant est un bon choix pour une mémoire AGI plus sérieuse.\n";
+  }
+  if(state.communication === "Web UI"){
+    txt += "- Web UI favorise un cockpit visuel plus riche.\n";
+  }
+  if(state.introspection === "Avancée"){
+    txt += "- L’introspection avancée colle bien à l’esprit DuffCore.\n";
+  }
+
+  if(issues.length){
+    txt += "\nPoints de vigilance\n";
+    issues.forEach(i => {
+      txt += "- " + i.msg + "\n";
+    });
+  } else {
+    txt += "\nAucune incohérence majeure détectée.\n";
+  }
+
+  if(state.mode === "guide"){
+    txt += "\nMode guidé : l’outil privilégie la cohérence.\n";
+  } else {
+    txt += "\nMode exploration : les combinaisons expérimentales sont acceptées.\n";
+  }
+
+  document.getElementById("analysis").textContent = txt;
+  document.getElementById("scoreBox").textContent = score ? score.toFixed(1) + "/10" : "—";
+  document.getElementById("statusBox").textContent = statusText;
+  document.getElementById("issuesBox").textContent = String(issues.length);
+}
+
+function renderPlan(){
+  let txt = "Plan DuffCore détaillé\n\n";
+
+  txt += "1. Couche entrée\n";
+  txt += "   - Communication : " + (state.communication || "à choisir") + "\n";
+  txt += "   - Perception : " + (state.perception || "à choisir") + "\n\n";
+
+  txt += "2. Couche intelligence\n";
+  txt += "   - Interprétation : " + (state.interpretation || "à choisir") + "\n";
+  txt += "   - Raisonnement : " + (state.reasoning || "à choisir") + "\n";
+  txt += "   - Planification : " + (state.planning || "à choisir") + "\n\n";
+
+  txt += "3. Couche mémoire et outils\n";
+  txt += "   - Mémoire : " + (state.memory || "à choisir") + "\n";
+  txt += "   - Outils : " + (state.tools || "à choisir") + "\n\n";
+
+  txt += "4. Couche exécution\n";
+  txt += "   - Orchestrateur : " + (state.orchestrator || "à choisir") + "\n";
+  txt += "   - Action : " + (state.action || "à choisir") + "\n\n";
+
+  txt += "5. Couche contrôle\n";
+  txt += "   - Sécurité : " + (state.security || "à choisir") + "\n";
+  txt += "   - Monitoring : " + (state.monitoring || "à choisir") + "\n";
+  txt += "   - Introspection : " + (state.introspection || "à choisir") + "\n\n";
+
+  if(state.profile === "simple"){
+    txt += "6. Priorité : vitesse de mise en route et faible friction.\n";
+  }
+  if(state.profile === "local"){
+    txt += "6. Priorité : autonomie locale, modèles et stockage sur machine.\n";
+  }
+  if(state.profile === "advanced"){
+    txt += "6. Priorité : évolutivité, orchestration forte, traçabilité.\n";
+  }
+
+  if(issues.length){
+    txt += "\n7. Corriger les incohérences avant implémentation réelle.\n";
+  }
+
+  document.getElementById("plan").textContent = txt;
+}
+
+function changeFlowScenario(v){
+  currentFlow = v;
+  flowIndex = 0;
+  renderFlow();
+}
+
+function renderFlow(){
+  const steps = flows[currentFlow];
+  const step = steps[flowIndex];
+
+  document.getElementById("flowStepCounter").textContent =
+    "Étape " + (flowIndex + 1) + " sur " + steps.length;
+
+  document.getElementById("flowStepBox").innerHTML =
+    "<strong>" + step.title + "</strong><div class='small' style='margin-top:8px'>" + step.text + "</div>";
+}
+
+function nextFlowStep(){
+  const steps = flows[currentFlow];
+  if(flowIndex < steps.length - 1){
+    flowIndex++;
+    renderFlow();
+  }
+}
+
+function prevFlowStep(){
+  if(flowIndex > 0){
+    flowIndex--;
+    renderFlow();
+  }
+}
+
+function resetFlow(){
+  flowIndex = 0;
+  renderFlow();
+}
+
+function renderModeProfileText(){
+  document.getElementById("modeSelect").value = state.mode;
+  document.getElementById("profileSelect").value = state.profile;
+
+  document.getElementById("modeDesc").textContent =
+    state.mode === "guide"
+      ? "Le système te guide, détecte les incohérences et propose des corrections."
+      : "Tu explores librement sans contrainte forte.";
+
+  let txt = "";
+  if(state.profile === "simple") txt = "Objectif : aller vite avec peu de friction.";
+  if(state.profile === "local") txt = "Objectif : autonomie locale et contrôle maximal.";
+  if(state.profile === "advanced") txt = "Objectif : puissance, modularité et évolutivité.";
+  document.getElementById("profileDesc").textContent = txt;
+}
+
+function renderVersion(){
+  document.getElementById("versionLine").textContent = "Version : " + APP_VERSION;
+}
 
 function render(){
-
-let html = "";
-
-layers.forEach(layer => {
-
-html += `<div class="layer"><h2>${layer.name}</h2>`;
-
-layer.modules.forEach(m => {
-
-html += `
-<details>
-<summary>${m.name} (${state[m.id] || "choisir"})</summary>
-
-<select onchange="select('${m.id}', this.value)">
-<option value="">-- choisir --</option>
-${m.options.map(o => `<option ${state[m.id]===o?"selected":""}>${o}</option>`).join("")}
-</select>
-
-</details>
-`;
-
-});
-
-html += "</div>";
-
-});
-
-document.getElementById("app").innerHTML = html;
-
-analyze();
-}
-
-function select(id,value){
-state[id] = value;
-render();
-}
-
-function analyze(){
-
-let text = "Architecture DuffCore\n\n";
-
-Object.keys(state).forEach(k=>{
-text += `${k} : ${state[k]}\n`;
-});
-
-document.getElementById("analysis").textContent = text;
+  renderVersion();
+  renderModeProfileText();
+  renderModules();
+  renderAnalysis();
+  renderPlan();
+  renderFlow();
 }
 
 render();
-
 </script>
-
 </body>
 </html>
