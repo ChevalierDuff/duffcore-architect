@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DuffCore Architect V11</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DuffCore Architect V12</title>
 <style>
 :root{
   --bg:#0b1220;
@@ -33,24 +33,6 @@ h1,h2,h3{margin:0 0 10px 0}
   padding:14px;
   margin-bottom:14px;
 }
-details{
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:8px;
-  margin-bottom:8px;
-}
-summary{cursor:pointer;font-weight:bold}
-select, button{
-  width:100%;
-  margin-top:8px;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:#0f182b;
-  color:var(--text);
-}
-button{cursor:pointer;background:#1d335b}
 .row{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -72,6 +54,24 @@ pre{
   padding:12px;
   overflow:auto;
 }
+details{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:8px;
+  margin-bottom:8px;
+}
+summary{cursor:pointer;font-weight:bold}
+select, button, input, textarea{
+  width:100%;
+  margin-top:8px;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#0f182b;
+  color:var(--text);
+}
+button{cursor:pointer;background:#1d335b}
 .kpis{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
@@ -87,6 +87,13 @@ pre{
   border-radius:10px;
   padding:10px;
 }
+.layer-title{
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-size:12px;
+  color:#b8c5e2;
+  margin:8px 0 10px 0;
+}
 .pill{
   display:inline-block;
   padding:4px 8px;
@@ -96,6 +103,45 @@ pre{
   margin:4px 6px 0 0;
   color:var(--muted);
 }
+.iface-card{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  margin-bottom:8px;
+}
+.iface-head{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  align-items:center;
+}
+.iface-name{font-weight:bold}
+.iface-cap{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:6px;
+}
+.cap{
+  font-size:11px;
+  padding:3px 7px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  color:var(--muted);
+}
+svg{
+  width:100%;
+  min-width:980px;
+  height:520px;
+  background:#0d1628;
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+.edge{stroke:#3e6097;stroke-width:2}
+.node{fill:#18253f;stroke:#4f8cff;stroke-width:2}
+.nodeText{fill:#eef4ff;font-size:12px;font-weight:bold}
+.nodeSub{fill:#9fb0d0;font-size:11px}
 .flowbox{
   background:#0d1628;
   border:1px solid var(--border);
@@ -115,11 +161,7 @@ pre{
   gap:8px;
   margin-top:10px;
 }
-.version{
-  margin-top:6px;
-  font-size:13px;
-  color:var(--muted);
-}
+.version{margin-top:6px;font-size:13px;color:var(--muted)}
 .notice{
   background:#151f34;
   border-left:4px solid var(--warn);
@@ -134,28 +176,28 @@ pre{
 <div class="section">
   <h1>DuffCore Architect</h1>
   <div class="version" id="versionLine"></div>
-  <div class="small">V11 : recommandations intelligentes + simulation de flux par scénario.</div>
+  <div class="small">V12 : base structurée en modèle + moteur + interface. Interfaces utilisateur multi-sélection, visualisation rétablie, scénarios et simulation de flux.</div>
 </div>
 
 <div class="section">
   <h2>Mode et profil</h2>
-  <select id="modeSelect" onchange="setMode(this.value)">
+  <select id="modeSelect" onchange="UI.setMode(this.value)">
     <option value="guide">Guidé</option>
     <option value="explore">Exploration</option>
   </select>
   <div id="modeDesc" class="small"></div>
 
-  <select id="profileSelect" onchange="setProfile(this.value)">
+  <select id="profileSelect" onchange="UI.setProfile(this.value)">
     <option value="simple">Rapide & simple</option>
     <option value="local">Autonome (local)</option>
     <option value="advanced">Puissant & évolutif</option>
   </select>
   <div id="profileDesc" class="small"></div>
 
-  <button onclick="applyScenario('simple')">Scénario cloud simple</button>
-  <button onclick="applyScenario('local')">Scénario local autonome</button>
-  <button onclick="applyScenario('advanced')">Scénario agentique avancée</button>
-  <button onclick="resetState()">Réinitialiser</button>
+  <button onclick="UI.applyScenario('simple')">Scénario cloud simple</button>
+  <button onclick="UI.applyScenario('local')">Scénario local autonome</button>
+  <button onclick="UI.applyScenario('advanced')">Scénario agentique avancée</button>
+  <button onclick="UI.reset()">Réinitialiser</button>
 
   <div class="kpis">
     <div class="kpi"><strong>Score global</strong><div id="scoreBox" class="small"></div></div>
@@ -165,15 +207,23 @@ pre{
 </div>
 
 <div class="row">
-  <div class="section">
-    <h2>Architecture</h2>
-    <div id="modulesUI"></div>
+  <div>
+    <div class="section">
+      <h2>Interfaces utilisateur</h2>
+      <div class="small">Ici, on ne choisit pas une seule interface. On active plusieurs canaux d’entrée/sortie possibles.</div>
+      <div id="interfacesUI"></div>
+    </div>
+
+    <div class="section">
+      <h2>Architecture par couches</h2>
+      <div id="layersUI"></div>
+    </div>
   </div>
 
   <div>
     <div class="section">
       <h2>Analyse intelligente</h2>
-      <button onclick="autoFix()">Corriger automatiquement</button>
+      <button onclick="UI.autoFix()">Corriger automatiquement</button>
       <pre id="analysis"></pre>
     </div>
 
@@ -185,8 +235,61 @@ pre{
 </div>
 
 <div class="section">
+  <h2>Visualisation synthèse</h2>
+  <div class="small">La carte montre la chaîne globale et les choix actifs. Les interfaces activées apparaissent dans le bloc dédié.</div>
+  <div style="overflow:auto; margin-top:10px;">
+    <svg viewBox="0 0 1100 520">
+      <line class="edge" x1="170" y1="90" x2="340" y2="90"></line>
+      <line class="edge" x1="420" y1="90" x2="590" y2="90"></line>
+      <line class="edge" x1="670" y1="90" x2="840" y2="90"></line>
+      <line class="edge" x1="920" y1="90" x2="1030" y2="90"></line>
+
+      <line class="edge" x1="590" y1="130" x2="590" y2="280"></line>
+      <line class="edge" x1="840" y1="130" x2="840" y2="280"></line>
+
+      <rect class="node" x="20" y="40" rx="12" ry="12" width="220" height="100"></rect>
+      <rect class="node" x="340" y="50" rx="12" ry="12" width="160" height="80"></rect>
+      <rect class="node" x="590" y="50" rx="12" ry="12" width="160" height="80"></rect>
+      <rect class="node" x="840" y="50" rx="12" ry="12" width="160" height="80"></rect>
+      <rect class="node" x="1010" y="50" rx="12" ry="12" width="70" height="80"></rect>
+
+      <rect class="node" x="510" y="280" rx="12" ry="12" width="160" height="80"></rect>
+      <rect class="node" x="760" y="280" rx="12" ry="12" width="160" height="80"></rect>
+
+      <text class="nodeText" x="130" y="72" text-anchor="middle">Interfaces utilisateur</text>
+      <text class="nodeSub" x="130" y="95" text-anchor="middle" id="graph-interfaces">—</text>
+
+      <text class="nodeText" x="420" y="76" text-anchor="middle">Perception</text>
+      <text class="nodeSub" x="420" y="97" text-anchor="middle" id="graph-perception">—</text>
+
+      <text class="nodeText" x="670" y="76" text-anchor="middle">Interprétation</text>
+      <text class="nodeSub" x="670" y="97" text-anchor="middle" id="graph-interpretation">—</text>
+
+      <text class="nodeText" x="920" y="76" text-anchor="middle">Raisonnement</text>
+      <text class="nodeSub" x="920" y="97" text-anchor="middle" id="graph-reasoning">—</text>
+
+      <text class="nodeText" x="1045" y="76" text-anchor="middle">Action</text>
+      <text class="nodeSub" x="1045" y="97" text-anchor="middle" id="graph-action">—</text>
+
+      <text class="nodeText" x="590" y="306" text-anchor="middle">Mémoire</text>
+      <text class="nodeSub" x="590" y="327" text-anchor="middle" id="graph-memory">—</text>
+
+      <text class="nodeText" x="840" y="306" text-anchor="middle">Orchestrateur</text>
+      <text class="nodeSub" x="840" y="327" text-anchor="middle" id="graph-orchestrator">—</text>
+    </svg>
+  </div>
+  <div style="margin-top:10px;">
+    <span class="pill" id="tag-planning">Planification : —</span>
+    <span class="pill" id="tag-tools">Outils : —</span>
+    <span class="pill" id="tag-security">Sécurité : —</span>
+    <span class="pill" id="tag-monitoring">Monitoring : —</span>
+    <span class="pill" id="tag-introspection">Introspection : —</span>
+  </div>
+</div>
+
+<div class="section">
   <h2>Simulation de flux</h2>
-  <select id="scenarioSelect" onchange="changeFlowScenario(this.value)">
+  <select id="flowScenarioSelect" onchange="UI.changeFlow(this.value)">
     <option value="telegram_image">Telegram → image → analyse → mémoire → réponse</option>
     <option value="voice_command">Voix → transcription → raisonnement → action</option>
     <option value="document_ingest">Document → OCR → structuration → mémoire</option>
@@ -194,507 +297,703 @@ pre{
 
   <div class="flowbox">
     <div><strong>Étape actuelle</strong></div>
-    <div id="flowStepCounter" class="small"></div>
-    <div id="flowStepBox" class="flow-step"></div>
+    <div id="flowCounter" class="small"></div>
+    <div id="flowBox" class="flow-step"></div>
 
     <div class="flow-nav">
-      <button onclick="prevFlowStep()">Retour</button>
-      <button onclick="nextFlowStep()">Suivant</button>
-      <button onclick="resetFlow()">Reset</button>
+      <button onclick="UI.prevFlow()">Retour</button>
+      <button onclick="UI.nextFlow()">Suivant</button>
+      <button onclick="UI.resetFlow()">Reset</button>
     </div>
   </div>
 </div>
 
 <script>
-const APP_VERSION = "11.0.0";
+const MODEL = {
+  version: "12.0.0",
 
-const modules = {
-  communication:["Telegram","Web UI","CLI"],
-  perception:["Texte","Whisper","OCR","Multimodal"],
-  interpretation:["Parsing","Classification","Structuration avancée"],
-  reasoning:["OpenAI","Ollama","Hybride"],
-  planning:["Basique","Planner","Agent"],
-  memory:["SQLite","Chroma","Qdrant"],
-  tools:["Simple","OCR+Web","Avancé"],
-  orchestrator:["Node-RED","n8n","LangGraph"],
-  action:["API","Python","Système"],
-  security:["Basique","Allowlist","Sandbox"],
-  monitoring:["Logs","Dashboard","Tracing"],
-  introspection:["Aucune","Simple","Avancée"]
-};
-
-const moduleLabels = {
-  communication:"Communication",
-  perception:"Perception",
-  interpretation:"Interprétation",
-  reasoning:"Raisonnement",
-  planning:"Planification",
-  memory:"Mémoire",
-  tools:"Outils",
-  orchestrator:"Orchestrateur",
-  action:"Action",
-  security:"Sécurité",
-  monitoring:"Monitoring",
-  introspection:"Introspection"
-};
-
-const flows = {
-  telegram_image: [
-    {
-      title:"1. Entrée Telegram",
-      text:"L’utilisateur envoie une image dans Telegram. Le module Communication reçoit la demande et la transmet au système."
-    },
-    {
-      title:"2. Routage initial",
-      text:"L’Orchestrateur décide que le flux doit passer par la Perception visuelle pour lire l’image."
-    },
-    {
-      title:"3. Analyse de l’image",
-      text:"Le module Perception utilise OCR ou vision pour extraire le texte ou les éléments utiles."
-    },
-    {
-      title:"4. Interprétation",
-      text:"Le module Interprétation transforme le contenu brut en structure compréhensible."
-    },
-    {
-      title:"5. Raisonnement",
-      text:"Le module Raisonnement analyse la demande, produit une réponse ou décide d’une action."
-    },
-    {
-      title:"6. Mémoire",
-      text:"Si utile, le résultat ou le contexte est stocké dans la Mémoire pour référence future."
-    },
-    {
-      title:"7. Réponse",
-      text:"Le système renvoie la réponse finale vers Telegram via le module Communication."
-    }
+  interfaces: [
+    { id:"telegram", label:"Telegram", input:true, output:true, realtime:true, type:"messaging" },
+    { id:"webui", label:"Web UI", input:true, output:true, visual:true, type:"visual" },
+    { id:"cli", label:"CLI", input:true, output:true, devMode:true, type:"terminal" },
+    { id:"email", label:"Email", input:true, output:true, async:true, type:"mail" },
+    { id:"api", label:"API REST", input:true, output:true, machine:true, type:"api" },
+    { id:"discord", label:"Discord", input:true, output:true, realtime:true, type:"messaging" }
   ],
-  voice_command: [
-    {
-      title:"1. Entrée vocale",
-      text:"L’utilisateur parle. Communication + Perception vocale reçoivent le signal."
-    },
-    {
-      title:"2. Transcription",
-      text:"Whisper ou équivalent transforme la voix en texte."
-    },
-    {
-      title:"3. Interprétation",
-      text:"Le texte est structuré et l’intention est clarifiée."
-    },
-    {
-      title:"4. Raisonnement",
-      text:"Le LLM décide de ce qu’il faut faire à partir de la commande."
-    },
-    {
-      title:"5. Planification",
-      text:"Le système découpe l’action en étapes si nécessaire."
-    },
-    {
-      title:"6. Action",
-      text:"La couche Action exécute le script, l’appel API ou la commande système."
-    },
-    {
-      title:"7. Retour utilisateur",
-      text:"Le résultat est renvoyé à l’utilisateur."
-    }
+
+  layers: [
+    { name:"Intelligence d'entrée", modules:["perception","interpretation"] },
+    { name:"Cognition", modules:["reasoning","planning"] },
+    { name:"Mémoire & outils", modules:["memory","tools"] },
+    { name:"Exécution", modules:["orchestrator","action"] },
+    { name:"Contrôle", modules:["security","monitoring","introspection"] }
   ],
-  document_ingest: [
-    {
-      title:"1. Réception document",
-      text:"Un fichier entre dans le système via Communication ou un dossier surveillé."
+
+  modules: {
+    perception:{
+      label:"Perception",
+      why:"Capte ce que le système reçoit.",
+      options:["Texte","Whisper","OCR","Multimodal"]
     },
-    {
-      title:"2. OCR / lecture",
-      text:"Perception lit le document, extrait le texte et les éléments utiles."
+    interpretation:{
+      label:"Interprétation",
+      why:"Transforme l’entrée brute en structure exploitable.",
+      options:["Parsing","Classification","Structuration avancée"]
     },
-    {
-      title:"3. Structuration",
-      text:"Interprétation classe, nettoie et structure le contenu."
+    reasoning:{
+      label:"Raisonnement",
+      why:"Cœur cognitif : compréhension, génération, analyse.",
+      options:["OpenAI","Ollama","Hybride"]
     },
-    {
-      title:"4. Raisonnement",
-      text:"Le LLM résume, catégorise ou enrichit les données du document."
+    planning:{
+      label:"Planification",
+      why:"Découpe un objectif en étapes cohérentes.",
+      options:["Basique","Planner","Agent"]
     },
-    {
-      title:"5. Mémoire",
-      text:"Le contenu est injecté dans la mémoire choisie : SQLite, Chroma ou Qdrant."
+    memory:{
+      label:"Mémoire",
+      why:"Stocke contexte, historique et documents.",
+      options:["SQLite","Chroma","Qdrant"]
     },
-    {
-      title:"6. Disponibilité",
-      text:"Le document devient exploitable par les autres modules et scénarios futurs."
+    tools:{
+      label:"Outils",
+      why:"Boîte à outils auxiliaire appelée par le système.",
+      options:["Simple","OCR+Web","Avancé"]
+    },
+    orchestrator:{
+      label:"Orchestrateur",
+      why:"Coordonne la circulation entre modules.",
+      options:["Node-RED","n8n","LangGraph"]
+    },
+    action:{
+      label:"Action",
+      why:"Exécute scripts, API et actions système.",
+      options:["API","Python","Système"]
+    },
+    security:{
+      label:"Sécurité",
+      why:"Valide permissions et réduit les risques.",
+      options:["Basique","Allowlist","Sandbox"]
+    },
+    monitoring:{
+      label:"Monitoring",
+      why:"Observe l’état, les erreurs et les traces.",
+      options:["Logs","Dashboard","Tracing"]
+    },
+    introspection:{
+      label:"Introspection",
+      why:"Permet au système de se relire et se corriger.",
+      options:["Aucune","Simple","Avancée"]
     }
-  ]
+  },
+
+  flows: {
+    telegram_image: [
+      {
+        title:"1. Réception via Telegram",
+        text:"Une image arrive par Telegram. L’interface utilisateur agit ici comme canal d’entrée et de sortie."
+      },
+      {
+        title:"2. Routage vers l’orchestrateur",
+        text:"Le système décide quel pipeline lancer selon le type de contenu reçu."
+      },
+      {
+        title:"3. Passage par Perception",
+        text:"La Perception applique OCR ou vision pour extraire les éléments utiles."
+      },
+      {
+        title:"4. Interprétation",
+        text:"Le contenu brut est structuré pour devenir compréhensible par le moteur cognitif."
+      },
+      {
+        title:"5. Raisonnement",
+        text:"Le LLM analyse la demande et décide d’une réponse, d’une action ou d’un enrichissement."
+      },
+      {
+        title:"6. Mémoire",
+        text:"Le contexte ou le résultat pertinent est stocké pour pouvoir être réutilisé plus tard."
+      },
+      {
+        title:"7. Retour interface",
+        text:"Le résultat revient à Telegram comme réponse finale."
+      }
+    ],
+    voice_command: [
+      {
+        title:"1. Entrée vocale",
+        text:"Un utilisateur parle via une interface compatible voix."
+      },
+      {
+        title:"2. Transcription",
+        text:"Whisper ou un outil équivalent transforme la voix en texte."
+      },
+      {
+        title:"3. Interprétation",
+        text:"L’intention de la commande est clarifiée."
+      },
+      {
+        title:"4. Raisonnement",
+        text:"Le moteur cognitif détermine ce qu’il faut faire."
+      },
+      {
+        title:"5. Planification",
+        text:"Le système découpe la demande en étapes si nécessaire."
+      },
+      {
+        title:"6. Action",
+        text:"La couche action exécute le script, l’appel API ou la commande."
+      },
+      {
+        title:"7. Sortie utilisateur",
+        text:"Le système renvoie une réponse ou confirmation."
+      }
+    ],
+    document_ingest: [
+      {
+        title:"1. Réception document",
+        text:"Un document entre via interface ou surveillance de dossier."
+      },
+      {
+        title:"2. Lecture du contenu",
+        text:"OCR ou lecture textuelle extrait le contenu exploitable."
+      },
+      {
+        title:"3. Structuration",
+        text:"Le système classe et organise les données du document."
+      },
+      {
+        title:"4. Raisonnement",
+        text:"Le LLM enrichit, résume ou catégorise les informations."
+      },
+      {
+        title:"5. Mémoire",
+        text:"Le document et son indexation sont injectés dans la mémoire choisie."
+      },
+      {
+        title:"6. Disponibilité future",
+        text:"Le contenu devient interrogeable par le reste du système."
+      }
+    ]
+  }
 };
 
-let state = {
-  mode:"guide",
-  profile:"simple"
-};
+const ENGINE = {
+  state: {
+    mode: "guide",
+    profile: "simple",
+    interfaces: [],
+    modules: {},
+    flowName: "telegram_image",
+    flowIndex: 0
+  },
 
-let currentFlow = "telegram_image";
-let flowIndex = 0;
-let issues = [];
-let score = 0;
-let statusText = "—";
-
-function setMode(v){
-  state.mode = v;
-  render();
-}
-
-function setProfile(v){
-  state.profile = v;
-  render();
-}
-
-function resetState(){
-  state = {
-    mode: state.mode || "guide",
-    profile: state.profile || "simple"
-  };
-  render();
-}
-
-function applyScenario(type){
-  if(type === "simple"){
-    state = {
-      mode:"guide",
-      profile:"simple",
-      communication:"Telegram",
-      perception:"Texte",
-      interpretation:"Parsing",
-      reasoning:"OpenAI",
-      planning:"Basique",
-      memory:"SQLite",
-      tools:"Simple",
-      orchestrator:"Node-RED",
-      action:"Python",
-      security:"Basique",
-      monitoring:"Logs",
-      introspection:"Simple"
+  reset() {
+    this.state = {
+      mode: this.state.mode || "guide",
+      profile: this.state.profile || "simple",
+      interfaces: [],
+      modules: {},
+      flowName: "telegram_image",
+      flowIndex: 0
     };
-  }
+  },
 
-  if(type === "local"){
-    state = {
-      mode:"guide",
-      profile:"local",
-      communication:"Telegram",
-      perception:"Whisper",
-      interpretation:"Classification",
-      reasoning:"Ollama",
-      planning:"Planner",
-      memory:"Qdrant",
-      tools:"OCR+Web",
-      orchestrator:"Node-RED",
-      action:"Python",
-      security:"Allowlist",
-      monitoring:"Dashboard",
-      introspection:"Avancée"
-    };
-  }
+  applyScenario(name) {
+    if (name === "simple") {
+      this.state.mode = "guide";
+      this.state.profile = "simple";
+      this.state.interfaces = ["telegram", "webui"];
+      this.state.modules = {
+        perception:"Texte",
+        interpretation:"Parsing",
+        reasoning:"OpenAI",
+        planning:"Basique",
+        memory:"SQLite",
+        tools:"Simple",
+        orchestrator:"Node-RED",
+        action:"Python",
+        security:"Basique",
+        monitoring:"Logs",
+        introspection:"Simple"
+      };
+      this.state.flowName = "telegram_image";
+      this.state.flowIndex = 0;
+    }
 
-  if(type === "advanced"){
-    state = {
-      mode:"guide",
-      profile:"advanced",
-      communication:"Web UI",
-      perception:"Multimodal",
-      interpretation:"Structuration avancée",
-      reasoning:"Hybride",
-      planning:"Agent",
-      memory:"Qdrant",
-      tools:"Avancé",
-      orchestrator:"LangGraph",
-      action:"Système",
-      security:"Sandbox",
-      monitoring:"Tracing",
-      introspection:"Avancée"
-    };
-  }
+    if (name === "local") {
+      this.state.mode = "guide";
+      this.state.profile = "local";
+      this.state.interfaces = ["telegram", "cli"];
+      this.state.modules = {
+        perception:"Whisper",
+        interpretation:"Classification",
+        reasoning:"Ollama",
+        planning:"Planner",
+        memory:"Qdrant",
+        tools:"OCR+Web",
+        orchestrator:"Node-RED",
+        action:"Python",
+        security:"Allowlist",
+        monitoring:"Dashboard",
+        introspection:"Avancée"
+      };
+      this.state.flowName = "voice_command";
+      this.state.flowIndex = 0;
+    }
 
-  render();
-}
+    if (name === "advanced") {
+      this.state.mode = "guide";
+      this.state.profile = "advanced";
+      this.state.interfaces = ["webui", "api", "telegram"];
+      this.state.modules = {
+        perception:"Multimodal",
+        interpretation:"Structuration avancée",
+        reasoning:"Hybride",
+        planning:"Agent",
+        memory:"Qdrant",
+        tools:"Avancé",
+        orchestrator:"LangGraph",
+        action:"Système",
+        security:"Sandbox",
+        monitoring:"Tracing",
+        introspection:"Avancée"
+      };
+      this.state.flowName = "document_ingest";
+      this.state.flowIndex = 0;
+    }
+  },
 
-function selectOption(key, value){
-  state[key] = value;
-  render();
-}
-
-function renderModules(){
-  let html = "";
-  Object.keys(modules).forEach(key => {
-    const value = state[key] || "";
-    html += `
-      <details>
-        <summary>${moduleLabels[key]} (${value || "choisir"})</summary>
-        <select onchange="selectOption('${key}', this.value)">
-          <option value=""></option>
-          ${modules[key].map(opt => `<option ${value===opt ? "selected" : ""}>${opt}</option>`).join("")}
-        </select>
-      </details>
-    `;
-  });
-  document.getElementById("modulesUI").innerHTML = html;
-}
-
-function computeScore(){
-  let total = 0;
-  let count = 0;
-
-  Object.keys(modules).forEach(key => {
-    const value = state[key];
-    if(!value) return;
-
+  scoreModule(key, value) {
     let s = 6;
 
-    if(key === "reasoning" && value === "OpenAI") s = 9;
-    if(key === "reasoning" && value === "Ollama") s = 7;
-    if(key === "reasoning" && value === "Hybride") s = 10;
+    if (key === "reasoning" && value === "OpenAI") s = 9;
+    if (key === "reasoning" && value === "Ollama") s = 7;
+    if (key === "reasoning" && value === "Hybride") s = 10;
 
-    if(key === "memory" && value === "SQLite") s = 6;
-    if(key === "memory" && value === "Chroma") s = 7;
-    if(key === "memory" && value === "Qdrant") s = 9;
+    if (key === "memory" && value === "SQLite") s = 6;
+    if (key === "memory" && value === "Chroma") s = 7;
+    if (key === "memory" && value === "Qdrant") s = 9;
 
-    if(key === "orchestrator" && value === "Node-RED") s = 8;
-    if(key === "orchestrator" && value === "n8n") s = 7;
-    if(key === "orchestrator" && value === "LangGraph") s = 10;
+    if (key === "orchestrator" && value === "Node-RED") s = 8;
+    if (key === "orchestrator" && value === "n8n") s = 7;
+    if (key === "orchestrator" && value === "LangGraph") s = 10;
 
-    if(key === "planning" && value === "Basique") s = 7;
-    if(key === "planning" && value === "Planner") s = 8;
-    if(key === "planning" && value === "Agent") s = 10;
+    if (key === "planning" && value === "Basique") s = 7;
+    if (key === "planning" && value === "Planner") s = 8;
+    if (key === "planning" && value === "Agent") s = 10;
 
-    if(state.profile === "simple" && key === "orchestrator" && value === "Node-RED") s += 1;
-    if(state.profile === "simple" && key === "reasoning" && value === "OpenAI") s += 1;
-    if(state.profile === "simple" && key === "orchestrator" && value === "LangGraph") s -= 2;
+    if (this.state.profile === "simple") {
+      if (key === "orchestrator" && value === "Node-RED") s += 1;
+      if (key === "reasoning" && value === "OpenAI") s += 1;
+      if (key === "orchestrator" && value === "LangGraph") s -= 2;
+      if (key === "planning" && value === "Agent") s -= 2;
+    }
 
-    if(state.profile === "local" && key === "reasoning" && value === "Ollama") s += 2;
-    if(state.profile === "local" && key === "reasoning" && value === "OpenAI") s -= 2;
+    if (this.state.profile === "local") {
+      if (key === "reasoning" && value === "Ollama") s += 2;
+      if (key === "reasoning" && value === "OpenAI") s -= 2;
+      if (key === "memory" && value === "Qdrant") s += 1;
+    }
 
-    if(state.profile === "advanced" && key === "orchestrator" && value === "LangGraph") s += 2;
-    if(state.profile === "advanced" && key === "planning" && value === "Agent") s += 1;
+    if (this.state.profile === "advanced") {
+      if (key === "orchestrator" && value === "LangGraph") s += 2;
+      if (key === "planning" && value === "Agent") s += 1;
+      if (key === "reasoning" && value === "Hybride") s += 1;
+      if (key === "tools" && value === "Avancé") s += 1;
+    }
 
-    s = Math.max(1, Math.min(10, s));
+    return Math.max(1, Math.min(10, s));
+  },
 
-    total += s;
-    count += 1;
-  });
+  computeScore() {
+    let total = 0;
+    let count = 0;
 
-  score = count ? total / count : 0;
-
-  if(score >= 8.5) statusText = "Architecture solide";
-  else if(score >= 7) statusText = "Architecture correcte";
-  else if(score > 0) statusText = "Architecture fragile";
-  else statusText = "Incomplète";
-}
-
-function detectIssues(){
-  const out = [];
-
-  if(state.orchestrator === "LangGraph" && state.memory === "SQLite"){
-    out.push({
-      msg:"LangGraph + SQLite est trop faible pour une architecture agentique avancée.",
-      fix:() => { state.memory = "Qdrant"; }
+    Object.keys(MODEL.modules).forEach(key => {
+      const value = this.state.modules[key];
+      if (!value) return;
+      total += this.scoreModule(key, value);
+      count += 1;
     });
-  }
 
-  if(state.reasoning === "Ollama" && state.profile === "simple"){
-    out.push({
-      msg:"Ollama est moins adapté à un profil rapide & simple.",
-      fix:() => { state.profile = "local"; }
+    const score = count ? total / count : 0;
+    let status = "Incomplète";
+    if (score >= 8.5) status = "Architecture solide";
+    else if (score >= 7) status = "Architecture correcte";
+    else if (score > 0) status = "Architecture fragile";
+
+    return { score, status };
+  },
+
+  detectIssues() {
+    const issues = [];
+
+    const s = this.state.modules;
+
+    if (s.orchestrator === "LangGraph" && s.memory === "SQLite") {
+      issues.push({
+        msg:"LangGraph + SQLite est trop faible pour une architecture agentique avancée.",
+        fix:() => { this.state.modules.memory = "Qdrant"; }
+      });
+    }
+
+    if (s.reasoning === "Ollama" && this.state.profile === "simple") {
+      issues.push({
+        msg:"Ollama est moins adapté à un profil rapide & simple.",
+        fix:() => { this.state.profile = "local"; }
+      });
+    }
+
+    if (s.action === "Système" && s.security === "Basique") {
+      issues.push({
+        msg:"Action système avec sécurité basique = risque trop élevé.",
+        fix:() => { this.state.modules.security = "Allowlist"; }
+      });
+    }
+
+    if (s.perception === "Multimodal" && s.tools === "Simple") {
+      issues.push({
+        msg:"Une perception multimodale mérite des outils plus riches.",
+        fix:() => { this.state.modules.tools = "OCR+Web"; }
+      });
+    }
+
+    if (this.state.profile === "advanced" && s.planning === "Basique") {
+      issues.push({
+        msg:"Profil avancé avec planification basique : sous-dimensionné.",
+        fix:() => { this.state.modules.planning = "Agent"; }
+      });
+    }
+
+    if (this.state.interfaces.length === 0) {
+      issues.push({
+        msg:"Aucune interface utilisateur active. Le système n’a pas de canal d’entrée/sortie.",
+        fix:() => { this.state.interfaces = ["webui"]; }
+      });
+    }
+
+    return issues;
+  },
+
+  autoFix() {
+    this.detectIssues().forEach(i => i.fix());
+  },
+
+  analysisText() {
+    const scoreData = this.computeScore();
+    const issues = this.detectIssues();
+
+    let txt = "Architecture actuelle\n\n";
+
+    txt += "Interfaces utilisateur : " +
+      (this.state.interfaces.length ? this.state.interfaces.map(id => MODEL.interfaces.find(i => i.id === id)?.label).join(", ") : "aucune") +
+      "\n";
+
+    Object.keys(MODEL.modules).forEach(key => {
+      txt += MODEL.modules[key].label + " : " + (this.state.modules[key] || "non défini") + "\n";
     });
-  }
 
-  if(state.action === "Système" && state.security === "Basique"){
-    out.push({
-      msg:"Action système avec sécurité basique = risque trop élevé.",
-      fix:() => { state.security = "Allowlist"; }
+    txt += "\nScore global : " + scoreData.score.toFixed(1) + "/10\n";
+    txt += "Statut : " + scoreData.status + "\n";
+    txt += "Mode : " + (this.state.mode === "guide" ? "Guidé" : "Exploration") + "\n";
+    txt += "Profil : " + this.state.profile + "\n";
+
+    txt += "\nCommentaires intelligents\n";
+
+    if (this.state.modules.reasoning === "Hybride") {
+      txt += "- Le mode hybride augmente la souplesse, mais aussi la complexité.\n";
+    }
+    if (this.state.modules.memory === "Qdrant") {
+      txt += "- Qdrant est un bon choix pour une mémoire AGI plus sérieuse.\n";
+    }
+    if (this.state.interfaces.includes("webui")) {
+      txt += "- Web UI favorise un cockpit visuel plus riche.\n";
+    }
+    if (this.state.modules.introspection === "Avancée") {
+      txt += "- L’introspection avancée renforce l’identité réflexive DuffCore.\n";
+    }
+
+    if (issues.length) {
+      txt += "\nPoints de vigilance\n";
+      issues.forEach(i => { txt += "- " + i.msg + "\n"; });
+    } else {
+      txt += "\nAucune incohérence majeure détectée.\n";
+    }
+
+    if (this.state.mode === "guide") {
+      txt += "\nMode guidé : l’outil privilégie la cohérence.\n";
+    } else {
+      txt += "\nMode exploration : les combinaisons expérimentales sont acceptées.\n";
+    }
+
+    return txt;
+  },
+
+  planText() {
+    const s = this.state.modules;
+    let txt = "Plan DuffCore détaillé\n\n";
+
+    txt += "1. Définir les interfaces utilisateur\n";
+    txt += "   - " + (this.state.interfaces.length ? this.state.interfaces.map(id => MODEL.interfaces.find(i => i.id === id)?.label).join(", ") : "à choisir") + "\n\n";
+
+    txt += "2. Couche entrée\n";
+    txt += "   - Perception : " + (s.perception || "à choisir") + "\n";
+    txt += "   - Interprétation : " + (s.interpretation || "à choisir") + "\n\n";
+
+    txt += "3. Couche cognition\n";
+    txt += "   - Raisonnement : " + (s.reasoning || "à choisir") + "\n";
+    txt += "   - Planification : " + (s.planning || "à choisir") + "\n\n";
+
+    txt += "4. Mémoire et outils\n";
+    txt += "   - Mémoire : " + (s.memory || "à choisir") + "\n";
+    txt += "   - Outils : " + (s.tools || "à choisir") + "\n\n";
+
+    txt += "5. Exécution\n";
+    txt += "   - Orchestrateur : " + (s.orchestrator || "à choisir") + "\n";
+    txt += "   - Action : " + (s.action || "à choisir") + "\n\n";
+
+    txt += "6. Contrôle\n";
+    txt += "   - Sécurité : " + (s.security || "à choisir") + "\n";
+    txt += "   - Monitoring : " + (s.monitoring || "à choisir") + "\n";
+    txt += "   - Introspection : " + (s.introspection || "à choisir") + "\n\n";
+
+    if (this.state.profile === "simple") {
+      txt += "7. Priorité : aller vite avec peu de friction.\n";
+    }
+    if (this.state.profile === "local") {
+      txt += "7. Priorité : autonomie locale, modèles et stockage sur machine.\n";
+    }
+    if (this.state.profile === "advanced") {
+      txt += "7. Priorité : évolutivité, orchestration forte et traçabilité.\n";
+    }
+
+    if (this.detectIssues().length) {
+      txt += "\n8. Corriger les incohérences avant implémentation réelle.\n";
+    }
+
+    return txt;
+  },
+
+  flowStep() {
+    const steps = MODEL.flows[this.state.flowName];
+    return steps[this.state.flowIndex];
+  },
+
+  nextFlow() {
+    const steps = MODEL.flows[this.state.flowName];
+    if (this.state.flowIndex < steps.length - 1) this.state.flowIndex += 1;
+  },
+
+  prevFlow() {
+    if (this.state.flowIndex > 0) this.state.flowIndex -= 1;
+  },
+
+  resetFlow() {
+    this.state.flowIndex = 0;
+  },
+
+  setFlow(name) {
+    this.state.flowName = name;
+    this.state.flowIndex = 0;
+  }
+};
+
+const UI = {
+  setMode(v) {
+    ENGINE.state.mode = v;
+    this.render();
+  },
+
+  setProfile(v) {
+    ENGINE.state.profile = v;
+    this.render();
+  },
+
+  reset() {
+    ENGINE.reset();
+    this.render();
+  },
+
+  applyScenario(name) {
+    ENGINE.applyScenario(name);
+    this.render();
+  },
+
+  toggleInterface(id, checked) {
+    const list = ENGINE.state.interfaces;
+    const exists = list.includes(id);
+
+    if (checked && !exists) list.push(id);
+    if (!checked && exists) ENGINE.state.interfaces = list.filter(x => x !== id);
+
+    this.render();
+  },
+
+  setModule(key, value) {
+    ENGINE.state.modules[key] = value;
+    this.render();
+  },
+
+  autoFix() {
+    ENGINE.autoFix();
+    this.render();
+  },
+
+  changeFlow(name) {
+    ENGINE.setFlow(name);
+    this.renderFlow();
+  },
+
+  nextFlow() {
+    ENGINE.nextFlow();
+    this.renderFlow();
+  },
+
+  prevFlow() {
+    ENGINE.prevFlow();
+    this.renderFlow();
+  },
+
+  resetFlow() {
+    ENGINE.resetFlow();
+    this.renderFlow();
+  },
+
+  renderVersion() {
+    document.getElementById("versionLine").textContent = "Version : " + MODEL.version;
+  },
+
+  renderModeProfile() {
+    document.getElementById("modeSelect").value = ENGINE.state.mode;
+    document.getElementById("profileSelect").value = ENGINE.state.profile;
+
+    document.getElementById("modeDesc").textContent =
+      ENGINE.state.mode === "guide"
+        ? "Le système te guide, détecte les incohérences et propose des corrections."
+        : "Tu explores librement sans contrainte forte.";
+
+    let txt = "";
+    if (ENGINE.state.profile === "simple") txt = "Objectif : aller vite avec peu de friction.";
+    if (ENGINE.state.profile === "local") txt = "Objectif : autonomie locale et contrôle maximal.";
+    if (ENGINE.state.profile === "advanced") txt = "Objectif : puissance, modularité et évolutivité.";
+    document.getElementById("profileDesc").textContent = txt;
+  },
+
+  renderInterfaces() {
+    let html = "";
+
+    MODEL.interfaces.forEach(iface => {
+      const active = ENGINE.state.interfaces.includes(iface.id);
+
+      html += `
+        <div class="iface-card">
+          <div class="iface-head">
+            <div class="iface-name">${iface.label}</div>
+            <div>
+              <input type="checkbox" ${active ? "checked" : ""} onchange="UI.toggleInterface('${iface.id}', this.checked)">
+            </div>
+          </div>
+          <div class="iface-cap">
+            ${iface.input ? '<span class="cap">entrée</span>' : ''}
+            ${iface.output ? '<span class="cap">sortie</span>' : ''}
+            ${iface.realtime ? '<span class="cap">temps réel</span>' : ''}
+            ${iface.visual ? '<span class="cap">visuel</span>' : ''}
+            ${iface.machine ? '<span class="cap">machine↔machine</span>' : ''}
+            ${iface.devMode ? '<span class="cap">dev</span>' : ''}
+            ${iface.async ? '<span class="cap">asynchrone</span>' : ''}
+            <span class="cap">${iface.type}</span>
+          </div>
+        </div>
+      `;
     });
-  }
 
-  if(state.perception === "Multimodal" && state.tools === "Simple"){
-    out.push({
-      msg:"Une perception multimodale mérite des outils plus riches.",
-      fix:() => { state.tools = "OCR+Web"; }
+    document.getElementById("interfacesUI").innerHTML = html;
+  },
+
+  renderLayers() {
+    let html = "";
+
+    MODEL.layers.forEach(layer => {
+      html += `<div class="layer-title">${layer.name}</div>`;
+
+      layer.modules.forEach(key => {
+        const mod = MODEL.modules[key];
+        const value = ENGINE.state.modules[key] || "";
+
+        html += `
+          <details>
+            <summary>${mod.label} (${value || "choisir"})</summary>
+            <div class="small" style="margin-top:8px">${mod.why}</div>
+            <select onchange="UI.setModule('${key}', this.value)">
+              <option value=""></option>
+              ${mod.options.map(opt => `<option ${value===opt ? "selected" : ""}>${opt}</option>`).join("")}
+            </select>
+          </details>
+        `;
+      });
     });
+
+    document.getElementById("layersUI").innerHTML = html;
+  },
+
+  renderKpisAndTexts() {
+    const scoreData = ENGINE.computeScore();
+    const issues = ENGINE.detectIssues();
+
+    document.getElementById("scoreBox").textContent = scoreData.score ? scoreData.score.toFixed(1) + "/10" : "—";
+    document.getElementById("statusBox").textContent = scoreData.status;
+    document.getElementById("issuesBox").textContent = String(issues.length);
+
+    document.getElementById("analysis").textContent = ENGINE.analysisText();
+    document.getElementById("plan").textContent = ENGINE.planText();
+  },
+
+  renderGraph() {
+    const s = ENGINE.state.modules;
+    const interfacesText = ENGINE.state.interfaces.length
+      ? ENGINE.state.interfaces.map(id => MODEL.interfaces.find(i => i.id === id)?.label).join(", ")
+      : "—";
+
+    document.getElementById("graph-interfaces").textContent = interfacesText;
+    document.getElementById("graph-perception").textContent = s.perception || "—";
+    document.getElementById("graph-interpretation").textContent = s.interpretation || "—";
+    document.getElementById("graph-reasoning").textContent = s.reasoning || "—";
+    document.getElementById("graph-memory").textContent = s.memory || "—";
+    document.getElementById("graph-orchestrator").textContent = s.orchestrator || "—";
+    document.getElementById("graph-action").textContent = s.action || "—";
+
+    document.getElementById("tag-planning").textContent = "Planification : " + (s.planning || "—");
+    document.getElementById("tag-tools").textContent = "Outils : " + (s.tools || "—");
+    document.getElementById("tag-security").textContent = "Sécurité : " + (s.security || "—");
+    document.getElementById("tag-monitoring").textContent = "Monitoring : " + (s.monitoring || "—");
+    document.getElementById("tag-introspection").textContent = "Introspection : " + (s.introspection || "—");
+  },
+
+  renderFlow() {
+    document.getElementById("flowScenarioSelect").value = ENGINE.state.flowName;
+
+    const steps = MODEL.flows[ENGINE.state.flowName];
+    const step = ENGINE.flowStep();
+
+    document.getElementById("flowCounter").textContent =
+      "Étape " + (ENGINE.state.flowIndex + 1) + " sur " + steps.length;
+
+    document.getElementById("flowBox").innerHTML =
+      "<strong>" + step.title + "</strong><div class='small' style='margin-top:8px'>" + step.text + "</div>";
+  },
+
+  render() {
+    this.renderVersion();
+    this.renderModeProfile();
+    this.renderInterfaces();
+    this.renderLayers();
+    this.renderKpisAndTexts();
+    this.renderGraph();
+    this.renderFlow();
   }
+};
 
-  if(state.profile === "advanced" && state.planning === "Basique"){
-    out.push({
-      msg:"Profil avancé avec planification basique : sous-dimensionné.",
-      fix:() => { state.planning = "Agent"; }
-    });
-  }
-
-  issues = out;
-}
-
-function autoFix(){
-  issues.forEach(i => i.fix());
-  render();
-}
-
-function renderAnalysis(){
-  computeScore();
-  detectIssues();
-
-  let txt = "Architecture actuelle\n\n";
-
-  Object.keys(modules).forEach(key => {
-    txt += moduleLabels[key] + " : " + (state[key] || "non défini") + "\n";
-  });
-
-  txt += "\nScore global : " + score.toFixed(1) + "/10\n";
-  txt += "Statut : " + statusText + "\n";
-  txt += "Mode : " + (state.mode === "guide" ? "Guidé" : "Exploration") + "\n";
-  txt += "Profil : " + state.profile + "\n";
-
-  txt += "\nCommentaires intelligents\n";
-
-  if(state.reasoning === "Hybride"){
-    txt += "- Le mode hybride augmente la souplesse, mais aussi la complexité.\n";
-  }
-  if(state.memory === "Qdrant"){
-    txt += "- Qdrant est un bon choix pour une mémoire AGI plus sérieuse.\n";
-  }
-  if(state.communication === "Web UI"){
-    txt += "- Web UI favorise un cockpit visuel plus riche.\n";
-  }
-  if(state.introspection === "Avancée"){
-    txt += "- L’introspection avancée colle bien à l’esprit DuffCore.\n";
-  }
-
-  if(issues.length){
-    txt += "\nPoints de vigilance\n";
-    issues.forEach(i => {
-      txt += "- " + i.msg + "\n";
-    });
-  } else {
-    txt += "\nAucune incohérence majeure détectée.\n";
-  }
-
-  if(state.mode === "guide"){
-    txt += "\nMode guidé : l’outil privilégie la cohérence.\n";
-  } else {
-    txt += "\nMode exploration : les combinaisons expérimentales sont acceptées.\n";
-  }
-
-  document.getElementById("analysis").textContent = txt;
-  document.getElementById("scoreBox").textContent = score ? score.toFixed(1) + "/10" : "—";
-  document.getElementById("statusBox").textContent = statusText;
-  document.getElementById("issuesBox").textContent = String(issues.length);
-}
-
-function renderPlan(){
-  let txt = "Plan DuffCore détaillé\n\n";
-
-  txt += "1. Couche entrée\n";
-  txt += "   - Communication : " + (state.communication || "à choisir") + "\n";
-  txt += "   - Perception : " + (state.perception || "à choisir") + "\n\n";
-
-  txt += "2. Couche intelligence\n";
-  txt += "   - Interprétation : " + (state.interpretation || "à choisir") + "\n";
-  txt += "   - Raisonnement : " + (state.reasoning || "à choisir") + "\n";
-  txt += "   - Planification : " + (state.planning || "à choisir") + "\n\n";
-
-  txt += "3. Couche mémoire et outils\n";
-  txt += "   - Mémoire : " + (state.memory || "à choisir") + "\n";
-  txt += "   - Outils : " + (state.tools || "à choisir") + "\n\n";
-
-  txt += "4. Couche exécution\n";
-  txt += "   - Orchestrateur : " + (state.orchestrator || "à choisir") + "\n";
-  txt += "   - Action : " + (state.action || "à choisir") + "\n\n";
-
-  txt += "5. Couche contrôle\n";
-  txt += "   - Sécurité : " + (state.security || "à choisir") + "\n";
-  txt += "   - Monitoring : " + (state.monitoring || "à choisir") + "\n";
-  txt += "   - Introspection : " + (state.introspection || "à choisir") + "\n\n";
-
-  if(state.profile === "simple"){
-    txt += "6. Priorité : vitesse de mise en route et faible friction.\n";
-  }
-  if(state.profile === "local"){
-    txt += "6. Priorité : autonomie locale, modèles et stockage sur machine.\n";
-  }
-  if(state.profile === "advanced"){
-    txt += "6. Priorité : évolutivité, orchestration forte, traçabilité.\n";
-  }
-
-  if(issues.length){
-    txt += "\n7. Corriger les incohérences avant implémentation réelle.\n";
-  }
-
-  document.getElementById("plan").textContent = txt;
-}
-
-function changeFlowScenario(v){
-  currentFlow = v;
-  flowIndex = 0;
-  renderFlow();
-}
-
-function renderFlow(){
-  const steps = flows[currentFlow];
-  const step = steps[flowIndex];
-
-  document.getElementById("flowStepCounter").textContent =
-    "Étape " + (flowIndex + 1) + " sur " + steps.length;
-
-  document.getElementById("flowStepBox").innerHTML =
-    "<strong>" + step.title + "</strong><div class='small' style='margin-top:8px'>" + step.text + "</div>";
-}
-
-function nextFlowStep(){
-  const steps = flows[currentFlow];
-  if(flowIndex < steps.length - 1){
-    flowIndex++;
-    renderFlow();
-  }
-}
-
-function prevFlowStep(){
-  if(flowIndex > 0){
-    flowIndex--;
-    renderFlow();
-  }
-}
-
-function resetFlow(){
-  flowIndex = 0;
-  renderFlow();
-}
-
-function renderModeProfileText(){
-  document.getElementById("modeSelect").value = state.mode;
-  document.getElementById("profileSelect").value = state.profile;
-
-  document.getElementById("modeDesc").textContent =
-    state.mode === "guide"
-      ? "Le système te guide, détecte les incohérences et propose des corrections."
-      : "Tu explores librement sans contrainte forte.";
-
-  let txt = "";
-  if(state.profile === "simple") txt = "Objectif : aller vite avec peu de friction.";
-  if(state.profile === "local") txt = "Objectif : autonomie locale et contrôle maximal.";
-  if(state.profile === "advanced") txt = "Objectif : puissance, modularité et évolutivité.";
-  document.getElementById("profileDesc").textContent = txt;
-}
-
-function renderVersion(){
-  document.getElementById("versionLine").textContent = "Version : " + APP_VERSION;
-}
-
-function render(){
-  renderVersion();
-  renderModeProfileText();
-  renderModules();
-  renderAnalysis();
-  renderPlan();
-  renderFlow();
-}
-
-render();
+UI.render();
 </script>
 </body>
 </html>
